@@ -1,0 +1,2 @@
+Bread board mare
+1x senzor DHT11

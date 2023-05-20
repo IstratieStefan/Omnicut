@@ -18,12 +18,9 @@
             "includePath": [
                 "C:\\Users\\Matei\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\cores\\arduino",
                 "C:\\Users\\Matei\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\variants\\standard",
-                "C:\\Users\\Matei\\Documents\\Arduino\\libraries\\LiquidCrystal_I2C-1.1.2",
-                "C:\\Users\\Matei\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\libraries\\Wire\\src",
-                "C:\\users\\matei\\appdata\\local\\arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7\\lib\\gcc\\avr\\7.3.0\\include",
-                "C:\\users\\matei\\appdata\\local\\arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7\\lib\\gcc\\avr\\7.3.0\\include-fixed",
-                "C:\\users\\matei\\appdata\\local\\arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7\\avr\\include",
-                "C:\\Users\\Matei\\Documents\\Arduino\\libraries\\adidax-dht11-b7fbbcd"
+                "c:\\users\\matei\\appdata\\local\\arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7\\lib\\gcc\\avr\\7.3.0\\include",
+                "c:\\users\\matei\\appdata\\local\\arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7\\lib\\gcc\\avr\\7.3.0\\include-fixed",
+                "c:\\users\\matei\\appdata\\local\\arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7\\avr\\include"
             ],
             "forcedInclude": [
                 "C:\\Users\\Matei\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\cores\\arduino\\Arduino.h"
