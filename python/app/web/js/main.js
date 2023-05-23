@@ -23,28 +23,54 @@ function initDemo() {
 }
 
 window.addEventListener('resize', function() {
-		preview.resize();
+	preview.resize();
 });
 
 var mainPort = "", secondaryPort = "";
 
+function foundMain(){
+	document.getElementById('displayer1').style.display = 'flex';
+	document.getElementById('connect2').style.display = 'none';
+}
+
+function foundSecondary(){
+	console.log(0987654321234567876543)
+	document.getElementById('displayer2').style.display = 'flex';
+	document.getElementById('connect1').style.display = 'none';
+}
+
 async function findBoards() {
 	await eel.connectBoards("", "")().then(async firstBoard => {
+		console.log(firstBoard);
 		if (firstBoard[1] == "main"){
+			console.log(35824);
 			mainPort = firstBoard[0];
+			foundMain();
 			await eel.connectBoards(firstBoard[0], "")().then(secondBoard => {
 				secondaryPort = secondBoard[0];
+				console.log(secondBoard);
+				foundSecondary();
 			});
 		} else {
+			console.log(6969420);
 			secondaryPort = firstBoard[0];
-			console.log(firstBoard);
+			foundSecondary();
 			await eel.connectBoards("", firstBoard[0])().then(secondBoard => {
 				mainPort = secondBoard[0];
+				console.log(secondBoard);
+				foundMain();
 			});
 		}
+		console.log(firstBoard);
 	});
-
-	console.log(typeof a);
 }
 
 findBoards();
+
+eel.expose(updateValues);
+function updateValues(values){
+	document.getElementById('topTemp').innerHTML = values[4] + " °C";
+	document.getElementById('bottomTemp').innerHTML = values[5] + " °C";
+	document.getElementById('topHum').innerHTML = values[6] + " %";
+	document.getElementById('bottomHum').innerHTML = values[7] + " %";
+}

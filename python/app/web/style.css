@@ -30,6 +30,7 @@ body {
     margin: 1vh;
     border-top-left-radius: 2vw;
     border-top-right-radius: 2vw;
+    box-shadow: 0px 0px 10px #000000;
 }
 
 #active {
@@ -39,6 +40,7 @@ body {
     border-top-left-radius: 2vw;
     border-top-right-radius: 2vw;
     margin: 1vh;
+    box-shadow: 0px 0px 10px #000000;
 }
 
 h1 {
@@ -75,30 +77,59 @@ h2 {
     height: 7vh;
     margin-top: 1vh;
     color: #D8DEE9;
+    box-shadow: 0px 3px 6px #000000; 
 }
 
 .val {
     font-size: 5vh;
     margin-left: 1vw;
+    color: #D8DEE9;
 }
+
+p {
+    color: #eceff4;
+}
+
+.dat {
+    width: 6vw;
+    text-align: center;
+    font-size: 4vh;
+    border-style: solid;
+    border-color: #D8DEE9;
+    border-radius: 0.3vw;
+    color: #D8DEE9;
+    padding: 0.2vh;
+    box-shadow: 0px 3px 6px #000000;
+    display: inline-block;
+}
+
 
 #coords {
     display: flex;
     background-color: #373E4C;
     border-top-left-radius: 2vw;
     border-top-right-radius: 2vw;
+    z-index: 3;
+    height: 25%;
 }
 
 .coordBtn {
     aspect-ratio: 1;
     background-color: #D8DEE9;
     border-style: none;
-    width: 3vw;
+    width: 100%;
+    color: #D8DEE9;
+    padding: 0%;
 }
 
 #controller {
     width: 75%;
     display: flex;
+}
+
+#monitoring {
+    border-top-left-radius: 2vw;
+    border-top-right-radius: 2vw;
 }
 
 #controller button {
@@ -112,8 +143,35 @@ h2 {
     margin-left: 1vw;
 }
 
+#XoY .act:hover, .coordBtn:hover {
+    opacity: 0.6;
+    scale: 1.2;
+    cursor: pointer;
+}
+
 #Z {
-    aspect-ratio: 3/1;
+    aspect-ratio: 1/3;
+}
+
+.reset {
+    font-family: 'Arimo', sans-serif;
+    font-weight: 900;
+    background-color: transparent;
+    border-style: solid;
+    border-color: #D8DEE9;
+    border-radius: 0.3vw;
+    color: #D8DEE9;
+    font-size: 2vh;
+    margin-top: 1vh;text-align: center;
+    box-shadow: 0px 3px 6px #000000; 
+}
+
+.stepSize {
+    font-family: 'Arimo', sans-serif;
+    border-radius: 0.3vw;
+    background-color: #D8DEE9;
+    border-style: none;
+    outline: none;
 }
 
 #data {
@@ -140,7 +198,36 @@ canvas:focus {
     outline: none;
 }
 
-/* for performance & stacking */
 canvas#renderer {
     transform: translateZ(0);
+}
+
+.editor__code {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: 1px solid var(--editor-border);
+}
+
+#from-gcode, #from-svg {
+    box-shadow: 0px 3px 6px #000000;
+    border-radius: 2vw;
+    height: 50%;
+    width: 45%;
+    margin-top: 10vh;
+}
+
+#render-ways {
+    display: flex;
+    justify-content: space-evenly;
+    height: 100%;
+}
+
+progress[value] {
+    accent-color: #88C0D0;
+    width: 100%;
 }

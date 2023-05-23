@@ -3221,6 +3221,7 @@
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 yield this._readFromStream(file.stream());
                 this.render();
+				preview.resize();
             }));
         }
         _readFromStream(stream) {
@@ -3234,6 +3235,7 @@
                     result = yield reader.read();
                     size += (_b = (_a = result.value) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0;
                     const str = decode(result.value);
+					document.getElementById('gcode').value += str;
                     const idxNewLine = str.lastIndexOf('\n');
                     const maxFullLine = str.slice(0, idxNewLine);
                     // parse increments but don't render yet
@@ -3254,5 +3256,4 @@
     exports.init = init;
 
     Object.defineProperty(exports, '__esModule', { value: true });
-
 }));
