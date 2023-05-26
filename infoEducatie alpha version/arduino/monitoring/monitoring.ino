@@ -314,7 +314,7 @@ void setup() {
   pinMode(in3, OUTPUT);
   pinMode(in4, OUTPUT);
   aLastState = digitalRead(enc1);
-  digitalWrite(in3, LOW);
+  digitalWrite(in3, HIGH);
   digitalWrite(in4, LOW);
   lcd.init();
   lcd.clear();         
@@ -466,6 +466,19 @@ void loop() {
           currentFanSpeed = 0;
         }
       }
+    } else if (page == 3){
+      if (digitalRead(enc2) != aState) { 
+        currentSpindleSpeed += 13;
+        if (currentSpindleSpeed > 255){
+          currentSpindleSpeed = 255;
+        }
+      } else {
+        currentSpindleSpeed -= 13;
+        if (currentSpindleSpeed < 0){
+          currentSpindleSpeed = 0;
+        }
+      }
+      analogWrite(enB, currentSpindleSpeed);
     }
   } 
   aLastState = aState;
