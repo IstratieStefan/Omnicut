@@ -1,10 +1,12 @@
+
+
 #include <LiquidCrystal_I2C.h>
 #include <dht11.h>
 
-const short DHTPin1 = 0, DHTPin2 = 1;
-const short button = 2, vent = 3, buzzer = 4;
-const short enc1 = 5, enc2 = 6, encP = 7;
-const short enB = 8, in3 = 9, in4 = 10;
+const short DHTPin1 = 4, DHTPin2 = 7;
+const short button = 2, vent = 5, buzzer = 3;
+const short enc1 = 12, enc2 = 11, encP = 6;
+const short enB = 10, in3 = 8, in4 = 9;
 short currentTopHumidity, currentBottomHumidity, currentTopTemperature, currentBottomTemperature;
 short currentFanSpeed = 0, currentSpindleSpeed = 0;
 short currentFanStage = 0;
