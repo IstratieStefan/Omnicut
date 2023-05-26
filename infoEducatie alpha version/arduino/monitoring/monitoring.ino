@@ -325,6 +325,7 @@ void setup() {
   lcd.createChar(5, midFill);
 }
 void loop() {
+  aState = digitalRead(enc1);
   chk = DHT11.read(DHTPin1);
   currentTopHumidity = round((float)DHT11.humidity);
   currentTopTemperature = round((float)DHT11.temperature);
