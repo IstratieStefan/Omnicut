@@ -14,7 +14,7 @@ short aState, aLastState, counter = 0;
 const short fanLimits[][2] = {{15, 0}, {25, 120}, {35, 200}, {45, 250}, {100, 255}}, limitLength = 5;
 char data[] = {'o', 'c', 's', (char)1, (char)1, (char)1, (char)1, (char)1, (char)1};
 
-bool ok = 1, alert = 0, ok2, ok3 = 1, fanMode = 0;
+bool ok = 1, alert = 0, ok2, ok3 = 1, fanMode = 1;
 short page = 0, lastPage = 1, progress = 50;
 
 int chk, i;
@@ -333,24 +333,25 @@ void loop() {
   currentBottomHumidity = round((float)DHT11.humidity);
   currentBottomTemperature = round((float)DHT11.temperature);
 
-  if (!(currentTopTemperature <= fanLimits[currentFanStage][0] && currentBottomTemperature <= fanLimits[currentFanStage][0] && (currentTopTemperature > fanLimits[currentFanStage-1][0] && currentBottomTemperature > fanLimits[currentFanStage-1][0]))){
-    for (i = 0, ok2 = 1; i < limitLength && ok2; ++i){
-      if (currentTopTemperature <= fanLimits[i][0] && currentBottomTemperature <= fanLimits[i][0]) {
-        ok2 = 0;
-        currentFanSpeed = fanLimits[i][1];
-        currentFanStage = i;
+  if (!fanMode){
+    if (!(currentTopTemperature <= fanLimits[currentFanStage][0] && currentBottomTemperature <= fanLimits[currentFanStage][0] && (currentTopTemperature > fanLimits[currentFanStage-1][0] && currentBottomTemperature > fanLimits[currentFanStage-1][0]))){
+      for (i = 0, ok2 = 1; i < limitLength && ok2; ++i){
+        if (currentTopTemperature <= fanLimits[i][0] && currentBottomTemperature <= fanLimits[i][0]) {
+          ok2 = 0;
+          currentFanSpeed = fanLimits[i][1];
+          currentFanStage = i;
+        }
+      }
+      analogWrite(vent, currentFanSpeed);
+      if (currentFanSpeed == 255){
+        digitalWrite(buzzer, HIGH);
+        alert = 1;  
+      } else if (alert){
+        alert = 0;
+        digitalWrite(buzzer, LOW);
       }
     }
-    analogWrite(vent, currentFanSpeed);
-    if (currentFanSpeed == 255){
-      digitalWrite(buzzer, HIGH);
-      alert = 1;  
-    } else if (alert){
-      alert = 0;
-      digitalWrite(buzzer, LOW);
-    }
   }
-  
   
   if (digitalRead(button) == HIGH){
       if (ok){
@@ -457,7 +458,7 @@ void loop() {
 
   if (aState != aLastState){
     if (page == 4 && fanMode){
-      if (digitalRead(enc2) != aState) { 
+      if (digitalRead(enc2) != aState) {
         currentFanSpeed += 13;
         if (currentFanSpeed > 255){
           currentFanSpeed = 255;
