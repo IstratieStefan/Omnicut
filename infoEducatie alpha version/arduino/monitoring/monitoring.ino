@@ -471,7 +471,7 @@ void loop() {
         }
       }
     } else if (page == 3){
-      if (digitalRead(enc2) != aState) { 
+      if (digitalRead(enc2) != aState) {
         currentSpindleSpeed += 13;
         if (currentSpindleSpeed > 255){
           currentSpindleSpeed = 255;
