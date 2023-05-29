@@ -18,67 +18,63 @@
     <div id="main-window">
         <div id="general">
             <div id="coords">
-                <div id="connect2" style="width: 100%;">
-                    <h2 style="margin-top: 2vh; font-size: 5vh; text-align: center;">Please connect the main board</h1>
-                </div>
-                <div id="displayer1" style="display: none;">
+                <div id="displayer1" style="display: flex;">
                     <div id="controller">
                         <table id="XoY">
                             <tr>
                                 <td></td>
-                                <td class="act" style="background-color: #00000000;background-image: url('./images/arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover; transform: rotate(-90deg);"><button class="coordBtn"></button></td>
+                                <td id="left" class="act" style="background-color: #00000000;background-image: url('./images/arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover; transform: rotate(-90deg);"><button class="coordBtn"></button></td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td class="act" style="background-color: #00000000; background-image: url('./images/arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover; transform: rotate(180deg);"><button class="coordBtn"></button></td>
-                                <td class="act" style="background-color: #00000000; background-image: url('./images/target.png'); background-position: center; background-repeat: no-repeat; background-size: cover; transform: rotate(180deg);"><button class="coordBtn"></button></td>
-                                <td class="act" style="background-color: #00000000; background-image: url('./images/arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover; transform: rotate(0deg);"><button class="coordBtn"></button></td>
+                                <td id="forward" class="act" style="background-color: #00000000; background-image: url('./images/arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover; transform: rotate(180deg);"><button class="coordBtn"></button></td>
+                                <td id="center" class="act" style="background-color: #00000000; background-image: url('./images/target.png'); background-position: center; background-repeat: no-repeat; background-size: cover; transform: rotate(180deg);"><button class="coordBtn"></button></td>
+                                <td id="backward" class="act" style="background-color: #00000000; background-image: url('./images/arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover; transform: rotate(0deg);"><button class="coordBtn"></button></td>
                             </tr>
                             <tr>
                                 <td></td>
-                                <td class="act" style="background-color: #00000000;background-image: url('./images/arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover; transform: rotate(90deg);"><button class="coordBtn"></button></td>
+                                <td id="right" class="act" style="background-color: #00000000;background-image: url('./images/arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover; transform: rotate(90deg);"><button class="coordBtn"></button></td>
                                 <td></td>
                             </tr>
                         </table>
                         <table id="Z">
                             <tr>
-                                <td><button class="coordBtn" style="width: 5vh !important; background-color: #00000000; background-image: url('./images/down-arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover; transform: rotate(180deg);"></button></td>
+                                <td><button id="up" class="coordBtn" style="width: 5vh !important; background-color: #00000000; background-image: url('./images/down-arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover; transform: rotate(180deg);"></button></td>
                             </tr>
                             <tr></tr>
                             <tr>
-                                <td><button class="coordBtn" style="width: 5vh !important; background-color: #00000000; background-image: url('./images/down-arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover;"></button></td>
+                                <td><button id="down" class="coordBtn" style="width: 5vh !important; background-color: #00000000; background-image: url('./images/down-arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover;"></button></td>
                             </tr>
                         </table>
                         <div style="display: flex; justify-content: space-between; flex-direction: column;">
                             <div style="display: flex; flex-direction: column;">
-                                <button class="reset">reset X</button>
-                                <button class="reset">reset Y</button>
-                                <button class="reset">reset Z</button>
+                                <button id="reset" class="reset">reset coords</button>
+
                             </div>
                             <div style="margin-bottom: 1vh;">
-                                <input class="stepSize" placeholder="step size (mm)">
+                                <input id="stepSize" type="number" class="stepSize" placeholder="step size (mm); def. 5">
                             </div>
                         </div>
                     </div>
                     <div id="data">
                         <div style="display: flex; justify-content: baseline; align-items: center;">
                             <h3 class="coord">X</h3>
-                            <span class="val">5.000</span>
+                            <span class="val">0.000</span>
                         </div>
                         <div style="display: flex; justify-content: baseline; align-items: center;">
                             <h3 class="coord">Y</h3>
-                            <span class="val">6.000</span>
+                            <span class="val">0.000</span>
                         </div>
                         <div style="display: flex; justify-content: baseline; align-items: center; margin-bottom: 1vh;">
                             <h3 class="coord">Z</h3>
-                            <span class="val">7.000</span>
+                            <span class="val">0.000</span>
                         </div>
                     </div>
                 </div>
             </div>
             <div style="padding: 1vw">
                 <div id="source" style="height: 25%; display: flex; text-align: center;">
-                    <textarea id="gcode" style="width: 100%; resize: none; outline: none; height: 100%; border-radius: 2vw; padding-left: 2vw; box-shadow: 0px 3px 6px #000000;" placeholder="Paste g-code here"></textarea>
+                    <textarea id="gcode" style="width: 100%; resize: none; outline: none; height: 100%; border-radius: 2vw; padding-left: 2vw; box-shadow: 0px 3px 6px #000000;" placeholder="G-code" readonly="true"></textarea>
                 </div>
                 <div id="progress" style=" height: 15%;">
                     <progress id="file" value="32" max="100"></progress>
@@ -86,9 +82,9 @@
                     <span>None</span>
                 </div>
                 <div id="console" style=" height: 35%;">
-                    <textarea style=" padding-left: 2vw; width: 100%; resize: none; outline: none; height: 80%; border-top-left-radius: 2vw; border-top-right-radius: 2vw; padding-left: 2vw; box-shadow: 0px 3px 6px #000000;" readonly="true"></textarea>
+                    <textarea id="commandHistory" style=" padding-left: 2vw; width: 100%; resize: none; outline: none; height: 80%; border-top-left-radius: 2vw; border-top-right-radius: 2vw; padding-left: 2vw; box-shadow: 0px 3px 6px #000000;" readonly="true"></textarea>
                     <div style="display: flex;">
-                        <input style="box-shadow: 0px 3px 6px #000000; padding-left: 2vw; width: 100%; height: 15%; font-size: 2vh; border-bottom-left-radius: 2vw; border-bottom-right-radius: 2vw; border-style: none; outline: none;">
+                        <input id="commandLine" style="box-shadow: 0px 3px 6px #000000; padding-left: 2vw; width: 100%; height: 15%; font-size: 2vh; border-bottom-left-radius: 2vw; border-bottom-right-radius: 2vw; border-style: none; outline: none;">
                     </div>
                 </div>
             </div>
@@ -96,40 +92,35 @@
         <div id="active">
             <div id="content2">
                 <div id="monitoring" style="height: 25%; display: flex; justify-content: space-evenly; background-color: #373E4C;">
-                    <div id="connect1" style="height: 25%;">
-                        <h2 style="font-size: 5vh; margin-top: 0;">Please connect the secondary board</h1>
-                    </div>
-                    <div id="displayer2" style="display: none;">
+                    <div id="displayer2" style="display: flex;">
                         <div style="padding: 0.4vw; align-self: center;">
                             <div>
                                 <img src="./images/thermometer.png" style="height: 6vh; aspect-ratio: 1;">
-                                <span class="dat" id="topTemp">20 °C</span>
+                                <span class="dat" id="topTemp">- °C</span>
                             </div>
                             <div>
                                 <img src="./images/drop.png" style="height: 6vh; aspect-ratio: 1;">
-                                <span class="dat" id="topHum">20 %</span>
+                                <span class="dat" id="topHum">- %</span>
                             </div>
                         </div>
                         <div style="padding: 0.4vw; align-self: center;">
                             <div>
                                 <img src="./images/thermometer.png" style="height: 6vh; aspect-ratio: 1;">
-                                <span class="dat" id="bottomTemp">20 °C</span>
+                                <span class="dat" id="bottomTemp">- °C</span>
                             </div>
                             <div>
                                 <img src="./images/drop.png" style="height: 6vh; aspect-ratio: 1;">
-                                <span class="dat" id="bottomHum">20 %</span>
+                                <span class="dat" id="bottomHum">- %</span>
                             </div>
                         </div>
                         <div style="padding: 0.4vw; align-self: center;">
                             <div>
                                 <img src="./images/vent.png" style="height: 6vh; aspect-ratio: 1;">
-                                <span class="dat">20 %</span>
-                                <span class="dat" style="width: 2vw !important;">A</span>
+                                <span class="dat">- %</span>
                             </div>
                             <div>
                                 <img src="./images/speed.png" style="height: 6vh; aspect-ratio: 1;">
-                                <span class="dat">20 %</span>
-                                <span class="dat" style="width: 2vw !important;">A</span>
+                                <span class="dat">- %</span>
                             </div>
                         </div>
                     </div>
@@ -146,12 +137,13 @@
         </div>
     </div>
     <div id="canvasBar" style="position: fixed; right: 2vw; bottom: 2vh; opacity: 0%;">
-        <button onclick="eel.selectFile()();">Select File</button>
-        <button>Convert SVG</button>
-        <label>Top color:</label>
-        <input type="color">
-        <label>Bottom color:</label>
-        <input type="color">
+        <input id="precision" type="number" placeholder="precision" value="10">
+        <input id="multiplier" type="number" placeholder="multiplier" value="1">
+        <label>convertSVG</label>
+        <input id="convertSVG" type="file">
+    </div>
+    <div id="SVGtransform" style="display: none;">
+
     </div>
     <script>
         setTimeout(function() {
@@ -169,8 +161,9 @@
     <script src="js/three.min.js"></script>
     <script src="js/canvas2image.js"></script>
     <script src="js/gcode-preview.js"></script>
-    <script src="js/svg2gcode.js"></script>
+    <script src="js/svg2gcode.js" type="module"></script>
     <script src="js/eel-comunication.js"></script>
-    <script src="js/init-preview.js"></script>
+    <script src="js/init-preview.js" type="module"></script>
+    <script src="js/fileInputHandler.js" type="module"></script>
   </body>
 </html>

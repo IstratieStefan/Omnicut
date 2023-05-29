@@ -4,7 +4,7 @@ from time import sleep, time
 from threading import Thread
 from easygui import fileopenbox
 
-eel.init(".\\python\\app\\web")
+eel.init(".\\eel version\\python\\app\\web")
 
 COM_Main = ""; COM_Second = ""; ser_sec = ""; ser_main = ""; req = ""
 
@@ -65,9 +65,12 @@ def lookForPort(port_name):
                     pass
         sleep(0.5)
 
-def evalGcode(command):
-    ser_main.write(command.encode() + str.encode('\n'))
-    eel.sendGcodeFeedback(ser_main.readline().strip().decode("utf-8"))
+@eel.expose()
+def evalGcode(commands):
+    for command in commands:
+        command = remove_comment(command)
+        ser_main.write(command.encode() + str.encode('\n'))
+        eel.sendGcodeFeedback(ser_main.readline().strip().decode("utf-8"))
 
 def remove_comment(string):
     if string.find(';') == -1:
@@ -83,8 +86,6 @@ def boardCommunication():
     if COM_Second in ports:
         if ser_sec.in_waiting > 0:
             eel.updateValues(list(ser_sec.readline()))
-    else:
-        eel.secondBoardDisconnected()
         COM_Second = ''
         Thread(target=lookForPort, args=('second',)).start()
     
