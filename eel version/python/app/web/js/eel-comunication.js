@@ -35,6 +35,21 @@ document.getElementById('reset').onclick = function(){
 	eel.evalGcode([`G92 X0 Y0 Z0`]);
 }
 
+document.getElementById('stop').onclick = function(){
+	console.log('stopped');
+	eel.evalGcode(['\x18']);
+}
+
+document.getElementById('pause').onclick = function(){
+	console.log('paused');
+	eel.evalGcode(['!']);
+}
+
+document.getElementById('resume').onclick = function(){
+	console.log('resumed');
+	eel.evalGcode(['~']);
+}
+
 cl.onkeyup = function(e){
 	if (e.key === "Enter" && cl.value != ""){
 		if (cl.value == '*'){
@@ -60,3 +75,5 @@ eel.expose(sendGcodeFeedback);
 function sendGcodeFeedback(msg){
 	ch.value += msg + '\n';
 }
+
+eel.readSerial();
