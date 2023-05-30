@@ -1,7 +1,6 @@
 import eel
 import serial, serial.tools.list_ports
 from time import sleep
-from easygui import fileopenbox
 
 eel.init(".\\eel version\\python\\app\\web")
 
@@ -20,17 +19,17 @@ def readSerial():
 
 @eel.expose()
 def evalGcode(commands):
-    print("Evaluating...")
+    global advance
     for command in commands:
         command = remove_comment(command)
-        print(f'Evaluating {command}')
+        print('Executed: ' + command)
         ser_main.write(command.encode() + str.encode('\n'))
         if '$' in command:
             sleep(0.1)
         else:
             sleep(0.02)
-        #while not ser_main.in_waiting:
-        #    sleep(0.01)
+        
+        advance = False
         #response = ser_main.read_all().strip().decode("utf-8")
         #print(f"Got response {response}")
         #eel.sendGcodeFeedback(response)
@@ -44,9 +43,8 @@ def remove_comment(string):
 def readData():
     if ser_main.in_waiting:
         message = ser_main.read_all().decode()
-        print(message.encode())
         return message
     else:
-        return "";
+        return ""
 
 eel.start('index.html', block=True)

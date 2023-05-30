@@ -139,7 +139,7 @@ p {
     margin-left: 1vw;
 }
 
-#XoY .act:hover, .coordBtn:hover, button:hover, #pause:hover, #resume:hover, #stop:hover {
+#XoY .act:hover, .coordBtn:hover, button:hover, #pause:hover, #resume:hover, #stop:hover, #start:hover{
     opacity: 0.6;
     scale: 1.2;
     cursor: pointer;

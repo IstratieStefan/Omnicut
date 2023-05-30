@@ -69,7 +69,10 @@ document.getElementById('resume').onclick = function(){
 }
 
 document.getElementById('start').onclick = function(){
-	eel.evalGcode(ta.value.split('\n'));
+	let splitted = ta.value.split('\n');
+	for (let i = 0; i < splitted.length; i++){
+		eel.evalGcode([splitted[i]]);
+	}
 }
 
 cl.onkeyup = function(e){
@@ -93,9 +96,9 @@ function updateValues(values){
 	document.getElementById('bottomHum').innerHTML = values[7] + " %";
 }
 
-/*eel.expose(sendGcodeFeedback);
+eel.expose(sendGcodeFeedback);
 function sendGcodeFeedback(msg){
 	ch.value += msg + '\n';
-}*/
+}
 
 eel.readSerial();

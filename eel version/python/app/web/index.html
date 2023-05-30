@@ -23,17 +23,17 @@
                         <table id="XoY">
                             <tr>
                                 <td></td>
-                                <td id="left" class="act" style="background-color: #00000000;background-image: '/Assets/left.svg'; background-position: center; background-repeat: no-repeat; background-size: cover;"><button class="coordBtn"></button></td>
+                                <td id="left" class="act" style="background-color: #00000000; background-image: url('./Assets/top.svg'); background-position: center; background-repeat: no-repeat; background-size: cover;"><button class="coordBtn"></button></td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td id="forward" class="act" style="background-color: #00000000; background-image: url('/Assets/top.svg'); background-position: center; background-repeat: no-repeat; background-size: cover;"><button class="coordBtn"></button></td>
-                                <td id="center" class="act" style="background-color: #00000000; background-image: url(''); background-position: center; background-repeat: no-repeat; background-size: cover;"><button class="coordBtn"></button></td>
-                                <td id="backward" class="act" style="background-color: #00000000; background-image: url('/Assets/bottom.svg') background-position: center; background-repeat: no-repeat; background-size: cover;"><button class="coordBtn"></button></td>
+                                <td id="forward" class="act" style="background-color: #00000000; background-image: url('./Assets/left.svg'); background-position: center; background-repeat: no-repeat; background-size: cover;"><button class="coordBtn"></button></td>
+                                <td id="center" class="act" style="background-color: #00000000; background-image: url('./Assets/center.svg'); background-position: center; background-repeat: no-repeat; background-size: cover;"><button class="coordBtn"></button></td>
+                                <td id="backward" class="act" style="background-color: #00000000; background-image: url('./Assets/right.svg'); background-position: center; background-repeat: no-repeat; background-size: cover;"><button class="coordBtn"></button></td>
                             </tr>
                             <tr>
                                 <td></td>
-                                <td id="right" class="act" style="background-color: #00000000;background-image: url('/Assets/right.svg'); background-position: center; background-repeat: no-repeat; background-size: cover;"><button class="coordBtn"></button></td>
+                                <td id="right" class="act" style="background-color: #00000000;background-image: url('./Assets/bottom.svg'); background-position: center; background-repeat: no-repeat; background-size: cover;"><button class="coordBtn"></button></td>
                                 <td></td>
                             </tr>
                         </table>
@@ -59,15 +59,15 @@
                     <div id="data">
                         <div style="display: flex; justify-content: baseline; align-items: center;">
                             <h3 class="coord">X</h3>
-                            <span class="val">0.000</span>
+                            <span id="Xval" class="val">0.000</span>
                         </div>
                         <div style="display: flex; justify-content: baseline; align-items: center;">
                             <h3 class="coord">Y</h3>
-                            <span class="val">0.000</span>
+                            <span id="Yval" class="val">0.000</span>
                         </div>
                         <div style="display: flex; justify-content: baseline; align-items: center; margin-bottom: 1vh;">
                             <h3 class="coord">Z</h3>
-                            <span class="val">0.000</span>
+                            <span id="Zval" class="val">0.000</span>
                         </div>
                     </div>
                 </div>
@@ -92,48 +92,50 @@
         <div id="active">
             <div id="content2">
                 <div id="monitoring" style="height: 25%; display: flex; justify-content: space-evenly; background-color: #464f61;">
-                    <div id="displayer2" style="display: flex;">
+                    <div id="displayer2" style="display: flex; width: 100%; justify-content: space-evenly;">
                         <div style="padding: 0.4vw; align-self: center;">
-                            <div>
-                                <img src="/Assets/thermometer_FILL0_wght700_GRAD200_opsz48.svg" style="height: 6vh; aspect-ratio: 1;">
+                            <div style="display: flex; align-items: center; margin-bottom: 1vh;">
+                                <img src="./Assets/thermometer_FILL0_wght700_GRAD200_opsz48.svg" style="height: 6vh; aspect-ratio: 1;">
                                 <span class="dat" id="topTemp">- °C</span>
                             </div>
-                            <div>
-                                <img src="/Assets/water_drop_FILL0_wght700_GRAD200_opsz48.svg" style="height: 6vh; aspect-ratio: 1;">
+                            <div style="display: flex; align-items: center;">
+                                <img src="./Assets/water_drop_FILL0_wght700_GRAD200_opsz48.svg" style="height: 6vh; aspect-ratio: 1;">
                                 <span class="dat" id="topHum">- %</span>
                             </div>
                         </div>
                         <div style="padding: 0.4vw; align-self: center;">
-                            <div>
-                                <img src="/Assets/thermometer_FILL0_wght700_GRAD200_opsz48.svg" style="height: 6vh; aspect-ratio: 1;">
+                            <div style="display: flex; align-items: center; margin-bottom: 1vh;">
+                                <img src="./Assets/thermometer_FILL0_wght700_GRAD200_opsz48.svg" style="height: 6vh; aspect-ratio: 1;">
                                 <span class="dat" id="bottomTemp">- °C</span>
                             </div>
-                            <div>
-                                <img src="/Assets/water_drop_FILL0_wght700_GRAD200_opsz48.svg" style="height: 6vh; aspect-ratio: 1;">
+                            <div style="display: flex; align-items: center;">
+                                <img src="./Assets/water_drop_FILL0_wght700_GRAD200_opsz48.svg" style="height: 6vh; aspect-ratio: 1;">
                                 <span class="dat" id="bottomHum">- %</span>
                             </div>
                         </div>
                         <div style="padding: 0.4vw; align-self: center;">
-                            <div>
-                                <img src="/Assets/mode_fan_FILL0_wght700_GRAD200_opsz48.svg" style="height: 6vh; aspect-ratio: 1;">
+                            <div style="display: flex; align-items: center; margin-bottom: 1vh;">
+                                <img src="./Assets/mode_fan_FILL0_wght700_GRAD200_opsz48.svg" style="height: 6vh; aspect-ratio: 1;">
                                 <span class="dat">- %</span>
                             </div>
-                            <div>
-                                <img src="/Assets/speed_FILL0_wght700_GRAD200_opsz48.svg" style="height: 6vh; aspect-ratio: 1;">
+                            <div style="display: flex; align-items: center;">
+                                <img src="./Assets/speed_FILL0_wght700_GRAD200_opsz48.svg" style="height: 6vh; aspect-ratio: 1;">
                                 <span class="dat">- %</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div id="model">
-                    <div style="padding: 1vw;">
-                        <img style="aspect-ratio: 1; width: 3vw" id="stop" src="/Assets/stop_FILL0_wght700_GRAD200_opsz48.svg">
-                        <img style="aspect-ratio: 1; width: 3vw" id="resume" src="/Assets/play_arrow_FILL0_wght700_GRAD200_opsz48.svg">
-                        <img style="aspect-ratio: 1; width: 3vw" id="pause" src="/Assets/pause_FILL0_wght700_GRAD200_opsz48.svg">
+                    <div style="padding: 1vw; display: flex; width: 100%; justify-content: space-evenly;">
+                        <img style="aspect-ratio: 1; width: 3vw" id="stop" src="./Assets/stop_FILL0_wght700_GRAD200_opsz48.svg">
+                        <img style="aspect-ratio: 1; width: 3vw" id="resume" src="./Assets/play_arrow_FILL0_wght700_GRAD200_opsz48.svg">
+                        <img style="aspect-ratio: 1; width: 3vw" id="pause" src="./Assets/pause_FILL0_wght700_GRAD200_opsz48.svg">
+                        <img style ="aspect-ratio: 1; width: 3vw" id="start" src="./Assets/send_FILL0_wght700_GRAD200_opsz48.svg">
                     </div>
                     <canvas id="renderer" class="gcode-previewer" data-engine="three.js r148" width="2048" height="2048" style="touch-action: none; background-color: blueviolet;"></canvas>
                     
                     <div id="canvasBar" style="position: fixed; right: 2vw; bottom: 2vh; opacity: 0%;">
+                        <input id="rise" type="number" placeholder="rise" value="3">
                         <input id="precision" type="number" placeholder="precision" value="10">
                         <input id="multiplier" type="number" placeholder="multiplier" value="1">
                         <label>convertSVG</label>

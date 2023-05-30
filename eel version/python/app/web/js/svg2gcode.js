@@ -32,7 +32,7 @@ export function convert2Gcode(svg, precision, multiplier){
                     final += `G0 X${pt.x*multiplier} Y${pt.y*multiplier} Z${rise}\n`;
                     raised = 1;
                 } else {
-                    final += `G1 X${pt.x*multiplier} Y${pt.y*multiplier} E40 F400\n`;
+                    final += `G1 X${pt.x*multiplier} Y${pt.y*multiplier} E40 F100\n`;
                     if (raised){
                         final += `G0 X${pt.x*multiplier} Y${pt.y*multiplier} Z-${rise}\n`;
                         raised = 0;
