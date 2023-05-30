@@ -23,17 +23,17 @@
                         <table id="XoY">
                             <tr>
                                 <td></td>
-                                <td id="left" class="act" style="background-color: #00000000;background-image: url('./images/arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover; transform: rotate(-90deg);"><button class="coordBtn"></button></td>
+                                <td id="left" class="act" style="background-color: #00000000;background-image: '/Assets/left.svg'; background-position: center; background-repeat: no-repeat; background-size: cover;"><button class="coordBtn"></button></td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td id="forward" class="act" style="background-color: #00000000; background-image: url('./images/arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover; transform: rotate(180deg);"><button class="coordBtn"></button></td>
-                                <td id="center" class="act" style="background-color: #00000000; background-image: url('./images/target.png'); background-position: center; background-repeat: no-repeat; background-size: cover; transform: rotate(180deg);"><button class="coordBtn"></button></td>
-                                <td id="backward" class="act" style="background-color: #00000000; background-image: url('./images/arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover; transform: rotate(0deg);"><button class="coordBtn"></button></td>
+                                <td id="forward" class="act" style="background-color: #00000000; background-image: url('/Assets/top.svg'); background-position: center; background-repeat: no-repeat; background-size: cover;"><button class="coordBtn"></button></td>
+                                <td id="center" class="act" style="background-color: #00000000; background-image: url(''); background-position: center; background-repeat: no-repeat; background-size: cover;"><button class="coordBtn"></button></td>
+                                <td id="backward" class="act" style="background-color: #00000000; background-image: url('/Assets/bottom.svg') background-position: center; background-repeat: no-repeat; background-size: cover;"><button class="coordBtn"></button></td>
                             </tr>
                             <tr>
                                 <td></td>
-                                <td id="right" class="act" style="background-color: #00000000;background-image: url('./images/arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover; transform: rotate(90deg);"><button class="coordBtn"></button></td>
+                                <td id="right" class="act" style="background-color: #00000000;background-image: url('/Assets/right.svg'); background-position: center; background-repeat: no-repeat; background-size: cover;"><button class="coordBtn"></button></td>
                                 <td></td>
                             </tr>
                         </table>
@@ -74,7 +74,7 @@
             </div>
             <div style="padding: 1vw">
                 <div id="source" style="height: 25%; display: flex; text-align: center;">
-                    <textarea id="gcode" style="width: 100%; resize: none; outline: none; height: 100%; border-radius: 2vw; padding-left: 2vw; box-shadow: 0px 3px 6px #000000;" placeholder="G-code" readonly="true"></textarea>
+                    <textarea id="gcode" style="width: 100%; resize: none; outline: none; height: 100%; border-radius: 2vh; padding-left: 2vh; box-shadow: 0px 3px 6px #000000;" placeholder="G-code" readonly="true"></textarea>
                 </div>
                 <div id="progress" style=" height: 15%;">
                     <progress id="file" value="32" max="100"></progress>
@@ -82,44 +82,44 @@
                     <span>None</span>
                 </div>
                 <div id="console" style=" height: 35%;">
-                    <textarea id="commandHistory" style=" padding-left: 2vw; width: 100%; resize: none; outline: none; height: 80%; border-top-left-radius: 2vw; border-top-right-radius: 2vw; padding-left: 2vw; box-shadow: 0px 3px 6px #000000;" readonly="true"></textarea>
+                    <textarea id="commandHistory" style=" padding-left: 2vh; width: 100%; resize: none; outline: none; height: 80%; border-top-left-radius: 2vh; border-top-right-radius: 2vh; padding-left: 2vh; box-shadow: 0px 3px 6px #000000;" readonly="true"></textarea>
                     <div style="display: flex;">
-                        <input id="commandLine" style="box-shadow: 0px 3px 6px #000000; padding-left: 2vw; width: 100%; height: 15%; font-size: 2vh; border-bottom-left-radius: 2vw; border-bottom-right-radius: 2vw; border-style: none; outline: none;">
+                        <input id="commandLine" style="box-shadow: 0px 3px 6px #000000; padding-left: 2vh; width: 100%; height: 15%; font-size: 2vh; border-bottom-left-radius: 2vw; border-bottom-right-radius: 2vw; border-style: none; outline: none;">
                     </div>
                 </div>
             </div>
         </div>
         <div id="active">
             <div id="content2">
-                <div id="monitoring" style="height: 25%; display: flex; justify-content: space-evenly; background-color: #373E4C;">
+                <div id="monitoring" style="height: 25%; display: flex; justify-content: space-evenly; background-color: #464f61;">
                     <div id="displayer2" style="display: flex;">
                         <div style="padding: 0.4vw; align-self: center;">
                             <div>
-                                <img src="./images/thermometer.png" style="height: 6vh; aspect-ratio: 1;">
+                                <img src="/Assets/thermometer_FILL0_wght700_GRAD200_opsz48.svg" style="height: 6vh; aspect-ratio: 1;">
                                 <span class="dat" id="topTemp">- °C</span>
                             </div>
                             <div>
-                                <img src="./images/drop.png" style="height: 6vh; aspect-ratio: 1;">
+                                <img src="/Assets/water_drop_FILL0_wght700_GRAD200_opsz48.svg" style="height: 6vh; aspect-ratio: 1;">
                                 <span class="dat" id="topHum">- %</span>
                             </div>
                         </div>
                         <div style="padding: 0.4vw; align-self: center;">
                             <div>
-                                <img src="./images/thermometer.png" style="height: 6vh; aspect-ratio: 1;">
+                                <img src="/Assets/thermometer_FILL0_wght700_GRAD200_opsz48.svg" style="height: 6vh; aspect-ratio: 1;">
                                 <span class="dat" id="bottomTemp">- °C</span>
                             </div>
                             <div>
-                                <img src="./images/drop.png" style="height: 6vh; aspect-ratio: 1;">
+                                <img src="/Assets/water_drop_FILL0_wght700_GRAD200_opsz48.svg" style="height: 6vh; aspect-ratio: 1;">
                                 <span class="dat" id="bottomHum">- %</span>
                             </div>
                         </div>
                         <div style="padding: 0.4vw; align-self: center;">
                             <div>
-                                <img src="./images/vent.png" style="height: 6vh; aspect-ratio: 1;">
+                                <img src="/Assets/mode_fan_FILL0_wght700_GRAD200_opsz48.svg" style="height: 6vh; aspect-ratio: 1;">
                                 <span class="dat">- %</span>
                             </div>
                             <div>
-                                <img src="./images/speed.png" style="height: 6vh; aspect-ratio: 1;">
+                                <img src="/Assets/speed_FILL0_wght700_GRAD200_opsz48.svg" style="height: 6vh; aspect-ratio: 1;">
                                 <span class="dat">- %</span>
                             </div>
                         </div>
@@ -127,21 +127,30 @@
                 </div>
                 <div id="model">
                     <div style="padding: 1vw;">
-                        <img style="aspect-ratio: 1; width: 3vw" id="pause" src="./images/pause.png">
-                        <img style="aspect-ratio: 1; width: 3vw" id="resume" src="./images/play-button.png">
-                        <img style="aspect-ratio: 1; width: 3vw" id="stop" src="./images/stop.png">
+                        <img style="aspect-ratio: 1; width: 3vw" id="stop" src="/Assets/stop_FILL0_wght700_GRAD200_opsz48.svg">
+                        <img style="aspect-ratio: 1; width: 3vw" id="resume" src="/Assets/play_arrow_FILL0_wght700_GRAD200_opsz48.svg">
+                        <img style="aspect-ratio: 1; width: 3vw" id="pause" src="/Assets/pause_FILL0_wght700_GRAD200_opsz48.svg">
                     </div>
                     <canvas id="renderer" class="gcode-previewer" data-engine="three.js r148" width="2048" height="2048" style="touch-action: none; background-color: blueviolet;"></canvas>
+                    
+                    <div id="canvasBar" style="position: fixed; right: 2vw; bottom: 2vh; opacity: 0%;">
+                        <input id="precision" type="number" placeholder="precision" value="10">
+                        <input id="multiplier" type="number" placeholder="multiplier" value="1">
+                        <label>convertSVG</label>
+                        <input id="convertSVG" type="file">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <!--
     <div id="canvasBar" style="position: fixed; right: 2vw; bottom: 2vh; opacity: 0%;">
         <input id="precision" type="number" placeholder="precision" value="10">
         <input id="multiplier" type="number" placeholder="multiplier" value="1">
         <label>convertSVG</label>
         <input id="convertSVG" type="file">
     </div>
+    -->
     <div id="SVGtransform" style="display: none;">
 
     </div>
