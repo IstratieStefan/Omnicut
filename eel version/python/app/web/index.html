@@ -130,6 +130,7 @@
                         <img style="aspect-ratio: 1; width: 3vw" id="pause" src="./images/pause.png">
                         <img style="aspect-ratio: 1; width: 3vw" id="resume" src="./images/play-button.png">
                         <img style="aspect-ratio: 1; width: 3vw" id="stop" src="./images/stop.png">
+                        <button id="start">startttt</button>
                     </div>
                     <canvas id="renderer" class="gcode-previewer" data-engine="three.js r148" width="2048" height="2048" style="touch-action: none; background-color: blueviolet;"></canvas>
                 </div>
@@ -137,6 +138,7 @@
         </div>
     </div>
     <div id="canvasBar" style="position: fixed; right: 2vw; bottom: 2vh; opacity: 0%;">
+        <input id="rise" type="number" placeholder="rise" value="3">
         <input id="precision" type="number" placeholder="precision" value="10">
         <input id="multiplier" type="number" placeholder="multiplier" value="1">
         <label>convertSVG</label>
@@ -165,5 +167,7 @@
     <script src="js/eel-comunication.js"></script>
     <script src="js/init-preview.js" type="module"></script>
     <script src="js/fileInputHandler.js" type="module"></script>
+    <script src="js/controller-handler.js"></script>
+    <script src="js/board-reading.js"></script>
   </body>
 </html>

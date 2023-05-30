@@ -1,7 +1,6 @@
 import eel
 import serial, serial.tools.list_ports
-from time import sleep, time
-from threading import Thread
+from time import sleep
 from easygui import fileopenbox
 
 eel.init(".\\eel version\\python\\app\\web")
@@ -17,23 +16,7 @@ ser_main.stopbits = 1
 def readSerial():
     sleep(4.5)
     response = ser_main.read_all().strip().decode("utf-8")
-    eel.sendGcodeFeedback(response)
-
-@eel.expose()
-def selectFile():
-    path = fileopenbox()
-    with open(path, 'r') as f:
-        for line in f:
-            if req != "":
-                if req == 'stop':
-                    pass
-            print(line)
-            sleep(0.3)
-
-@eel.expose()
-def doRequest(msg):
-    global req
-    req = msg;
+    #eel.sendGcodeFeedback(response)
 
 @eel.expose()
 def evalGcode(commands):
@@ -46,15 +29,24 @@ def evalGcode(commands):
             sleep(0.1)
         else:
             sleep(0.02)
-        response = ser_main.read_all().strip().decode("utf-8")
-        print(f"Got response {response}")
-        eel.sendGcodeFeedback(response)
-        if ser_main.in_waiting:
-            ser_main.read_all().strip().decode("utf-8")
+        #while not ser_main.in_waiting:
+        #    sleep(0.01)
+        #response = ser_main.read_all().strip().decode("utf-8")
+        #print(f"Got response {response}")
+        #eel.sendGcodeFeedback(response)
 
 def remove_comment(string):
     if string.find(';') == -1:
         return string
     return string[:string.index(';')]
+
+@eel.expose()
+def readData():
+    if ser_main.in_waiting:
+        message = ser_main.read_all().decode()
+        print(message.encode())
+        return message
+    else:
+        return "";
 
 eel.start('index.html', block=True)

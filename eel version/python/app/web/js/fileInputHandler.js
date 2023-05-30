@@ -14,7 +14,8 @@ SVGinput.onchange = function(){
                     console.log(document.getElementById('precision').value, document.getElementById('multiplier'));
                     let code = convert2Gcode(evt.target.result, +document.getElementById('precision').value, +document.getElementById('multiplier').value);
                     startLoadingProgressive(code);
-                    document.getElementById('gcode').value = code;
+                    console.log(code)
+                    document.getElementById('gcode').value = code.replaceAll(' E40', '');
                 } else {
                     alert("You must fill in the precision and the multiplier to submit an SVG file.")
                 }
@@ -22,7 +23,7 @@ SVGinput.onchange = function(){
         } else {
             reader.onload = function (evt) {
                 startLoadingProgressive(evt.target.result);
-                document.getElementById('gcode').value = evt.target.result;
+                document.getElementById('gcode').value = evt.target.result.replaceAll(' E40', '');
             }   
         }
         reader.onerror = function () {
