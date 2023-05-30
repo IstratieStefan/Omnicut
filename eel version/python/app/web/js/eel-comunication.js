@@ -1,6 +1,7 @@
 let ta = document.getElementById('gcode');
 let cl = document.getElementById('commandLine');
 let ch = document.getElementById('commandHistory');
+step = document.getElementById('stepSize');
 
 document.getElementById('up').onclick = function(){
 	eel.evalGcode(["G91", `G0 X0 Y0 Z${+step.value}`, "G90"]);
@@ -10,19 +11,19 @@ document.getElementById('down').onclick = function(){
 	eel.evalGcode(["G91", `G0 X0 Y0 Z${-step.value}`, "G90"]);
 }
 
-document.getElementById('left').onclick = function(){
+document.getElementById('forward').onclick = function(){
 	eel.evalGcode(["G91", `G0 X${-step.value} Y0 Z0`, "G90"]);
 }
 
-document.getElementById('right').onclick = function(){
+document.getElementById('backward').onclick = function(){
 	eel.evalGcode(["G91", `G0 X${+step.value} Y0 Z0`, "G90"]);
 }
 
-document.getElementById('forward').onclick = function(){
+document.getElementById('left').onclick = function(){
 	eel.evalGcode(["G91", `G0 X0 Y${+step.value} Z0`, "G90"]);
 }
 
-document.getElementById('backward').onclick = function(){
+document.getElementById('right').onclick = function(){
 	eel.evalGcode(["G91", `G0 X0 Y${-step.value} Z0`, "G90"]);
 }
 
@@ -57,5 +58,5 @@ function updateValues(values){
 
 eel.expose(sendGcodeFeedback);
 function sendGcodeFeedback(msg){
-	ta.value += msg + '\n';
+	ch.value += msg + '\n';
 }
