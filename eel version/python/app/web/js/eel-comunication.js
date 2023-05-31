@@ -69,10 +69,7 @@ document.getElementById('resume').onclick = function(){
 }
 
 document.getElementById('start').onclick = function(){
-	let splitted = ta.value.split('\n');
-	for (let i = 0; i < splitted.length; i++){
-		eel.evalGcode([splitted[i]]);
-	}
+	eel.evalGcode(ta.value.split('\n'));
 }
 
 cl.onkeyup = function(e){
@@ -88,13 +85,13 @@ cl.onkeyup = function(e){
 	}
 }
 
-eel.expose(updateValues);
+/*eel.expose(updateValues);
 function updateValues(values){
 	document.getElementById('topTemp').innerHTML = values[4] + " °C";
 	document.getElementById('bottomTemp').innerHTML = values[5] + " °C";
 	document.getElementById('topHum').innerHTML = values[6] + " %";
 	document.getElementById('bottomHum').innerHTML = values[7] + " %";
-}
+}*/
 
 eel.expose(sendGcodeFeedback);
 function sendGcodeFeedback(msg){
