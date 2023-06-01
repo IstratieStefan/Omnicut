@@ -4,17 +4,8 @@ from time import sleep
 
 eel.init(".\\eel version\\python\\app\\web")
 
-COM_Main = ""; COM_Second = ""; ser_sec = ""; ser_main = serial.Serial('COM6'); req = ""; ser_second = serial.Serial('COM5')
-
-ser_main.baudrate = 115200
-ser_main.bytesize = 8
-ser_main.parity = 'N'
-ser_main.stopbits = 1
-
-ser_second.baudrate = 115200
-ser_second.bytesize = 8
-ser_second.parity = 'N'
-ser_second.stopbits = 1
+ser_main = serial.Serial('COM6', baudrate=115200, bytesize=8, parity='N', stopbits=1)
+ser_second = serial.Serial('COM5', baudrate=115200, bytesize=8, parity='N', stopbits=1)
 
 @eel.expose()
 def readSerial():
@@ -23,20 +14,9 @@ def readSerial():
     eel.sendGcodeFeedback(response)
 
 @eel.expose()
-def evalGcode(commands):
-    for command in commands:
-        command = remove_comment(command)
-        print('Executed: ' + command)
-        ser_main.write(command.encode() + str.encode('\n'))
-        if '$' in command:
-            sleep(0.1)
-        else:
-            sleep(0.02)
-        while not ser_main.in_waiting:
-            sleep(0.01)
-        response = ser_main.read_all().strip().decode("utf-8")
-        print(f"Got response {response}")
-        eel.sendGcodeFeedback(response)
+def evalGcode(command):
+    if command != None:
+        ser_main.write((remove_comment(command)+'\n').encode())
 
 def remove_comment(string):
     if string.find(';') == -1:
@@ -56,5 +36,18 @@ def readData():
         return out
     else:
         return ""
+    
+@eel.expose()
+def readGRBL():
+    try:
+        if ser_main.in_waiting:
+            return ser_main.read_all().decode()
+    
+    except:
+        return ""
+    
+    return ""
+
+    
 
 eel.start('index.html', block=True)
