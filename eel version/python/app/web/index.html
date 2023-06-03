@@ -46,11 +46,7 @@
                                 <td><button id="down" class="coordBtn" style="width: 5vh !important; background-color: #00000000; background-image: url('./images/down-arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover;"></button></td>
                             </tr>
                         </table>
-                        <div style="display: flex; justify-content: space-between; flex-direction: column;">
-                            <div style="display: flex; flex-direction: column;">
-                                <button id="reset" class="reset">reset coords</button>
-
-                            </div>
+                        <div style="display: flex; justify-content: end; flex-direction: column;">
                             <div style="margin-bottom: 1vh;">
                                 <input id="stepSize" type="number" class="stepSize" placeholder="step size (mm); def. 5">
                             </div>
@@ -124,39 +120,58 @@
                             </div>
                         </div>
                     </div>
+                    <div id="settings" style="display: none; width: 100%; justify-content: space-evenly; color: #eceff4;">
+                        <div style="display: flex; flex-direction: column; margin-top: 2vh;">
+                            <label>Rise level</label>
+                            <input min="0" id="rise" type="number" placeholder="rise" value="3">
+                            <label>Model precision</label>
+                            <input min="0" id="precision" type="number" placeholder="precision" value="10">
+                            <label>Size multiplier</label>
+                            <input min="0" id="multiplier" type="number" placeholder="multiplier" value="1">
+                        </div>
+                        <div style="display: flex; flex-direction: column; margin-top: 2vh;">
+                            <label>Offset X</label>
+                            <input id="ofX" type="number" placeholder="offset X" value="0">
+                            <label>Offset Y</label>
+                            <input id="ofY" type="number" placeholder="offset Y" value="0">
+                            <label>Offset Z</label>
+                            <input id="ofZ" type="number" placeholder="offset Z" value="0">
+                        </div>
+                        <div style="display: flex; flex-direction: column; margin-top: 2vh;">
+                            <label>Feed rate</label>
+                            <input min="0" id="feed" type="number" placeholder="feed rate" value="200">
+                            <label>Step depth</label>
+                            <input min="0" id="feed" type="number" placeholder="lower" value="0.1">
+                            <label>Total depth</label>
+                            <input min="0" id="feed" type="number" placeholder="feed rate" value="0.5">
+                        </div>
+                        <div style="display: flex; flex-direction: column; justify-content: space-between; margin-top: 2vh;">
+                            <div style="display: flex; flex-direction: column;">
+                                <label>Select file (G-code/SVG)</label>
+                                <input id="convertSVG" type="file">
+                            </div>
+                            <div style="display: flex; flex-direction: column;">
+                                <label>Refresh model</label>
+                                <img class="action" style="aspect-ratio: 1; width: 3vw" id="refresh" src="./Assets/cached_FILL0_wght700_GRAD200_opsz48.svg">
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div id="model">
                     <div style="padding: 1vw; display: flex; width: 100%; justify-content: space-evenly;">
-                        <img style="aspect-ratio: 1; width: 3vw" id="stop" src="./Assets/stop_FILL0_wght700_GRAD200_opsz48.svg">
-                        <img style="aspect-ratio: 1; width: 3vw" id="resume" src="./Assets/play_arrow_FILL0_wght700_GRAD200_opsz48.svg">
-                        <img style="aspect-ratio: 1; width: 3vw" id="pause" src="./Assets/pause_FILL0_wght700_GRAD200_opsz48.svg">
-                        <img style ="aspect-ratio: 1; width: 3vw" id="start" src="./Assets/send_FILL0_wght700_GRAD200_opsz48.svg">
+                        <img class="action" style="aspect-ratio: 1; width: 3vw" id="stop" src="./Assets/stop_FILL0_wght700_GRAD200_opsz48.svg">
+                        <img class="action" style="aspect-ratio: 1; width: 3vw" id="resume" src="./Assets/play_arrow_FILL0_wght700_GRAD200_opsz48.svg">
+                        <img class="action" style="aspect-ratio: 1; width: 3vw" id="pause" src="./Assets/pause_FILL0_wght700_GRAD200_opsz48.svg">
+                        <img class="action" style ="aspect-ratio: 1; width: 3vw" id="draw" src="./Assets/brush_FILL0_wght400_GRAD0_opsz48.svg">
+                        <img class="action" style ="aspect-ratio: 1; width: 3vw" id="cut" src="./Assets/carpenter_FILL0_wght700_GRAD200_opsz48.svg">
                     </div>
                     <canvas id="renderer" class="gcode-previewer" data-engine="three.js r148" width="2048" height="2048" style="touch-action: none; background-color: blueviolet;"></canvas>
-                    
-                    <div id="canvasBar" style="position: fixed; right: 2vw; bottom: 2vh; opacity: 0%;">
-                        <input id="rise" type="number" placeholder="rise" value="3">
-                        <input id="precision" type="number" placeholder="precision" value="10">
-                        <input id="multiplier" type="number" placeholder="multiplier" value="1">
-                        <label>convertSVG</label>
-                        <input id="convertSVG" type="file">
-                    </div>
+                    <img id="menu" class="action" style="aspect-ratio: 1; width: 3vw; margin: 0.2vw; opacity: 0%; position: fixed; bottom: 2vw; right: 2vw;" id="cut" src="./Assets/analytics_FILL0_wght700_GRAD200_opsz48.svg">
                 </div>
             </div>
         </div>
     </div>
-    <!--
-    <div id="canvasBar" style="position: fixed; right: 2vw; bottom: 2vh; opacity: 0%;">
-        <input id="rise" type="number" placeholder="rise" value="3">
-        <input id="precision" type="number" placeholder="precision" value="10">
-        <input id="multiplier" type="number" placeholder="multiplier" value="1">
-        <label>convertSVG</label>
-        <input id="convertSVG" type="file">
-    </div>
-    -->
-    <div id="SVGtransform" style="display: none;">
-
-    </div>
+    <div id="SVGtransform" style="display: none;"></div>
     <script>
         setTimeout(function() {
             document.getElementById('loading-screen').style.display = 'none';
@@ -166,15 +181,27 @@
             document.getElementById('main-window').style.transform = 'translateY(-100%)';
             setTimeout(function(){
                 document.getElementById('main-window').style.transitionDuration = '0s';
-                document.getElementById('canvasBar').style.opacity = '100%';
+                document.getElementById('menu').style.opacity = '100%';
             }, 1000);
         }, 5000);
+        var mode = 1;
+        document.getElementById('menu').onclick = function(){
+            if (mode){
+                document.getElementById('menu').src = "./Assets/build_FILL0_wght700_GRAD200_opsz48.svg";
+                document.getElementById('settings').style.display = 'flex';
+                document.getElementById('displayer2').style.display = 'none';
+            } else {
+                document.getElementById('menu').src = "./Assets/analytics_FILL0_wght700_GRAD200_opsz48.svg";
+                document.getElementById('settings').style.display = 'none';
+                document.getElementById('displayer2').style.display = 'flex';
+            }
+            mode = !mode;
+        }
     </script>
     <script src="js/three.min.js"></script>
     <script src="js/canvas2image.js"></script>
     <script src="js/gcode-preview.js"></script>
     <script src="js/svg2gcode.js" type="module"></script>
-    <script src="js/eel-comunication.js"></script>
     <script src="js/init-preview.js" type="module"></script>
     <script src="js/fileInputHandler.js" type="module"></script>
     <script src="js/controller-handler.js"></script>

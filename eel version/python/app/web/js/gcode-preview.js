@@ -2878,6 +2878,9 @@
     class WebGLPreview {
         constructor(opts) {
             var _a, _b, _c;
+			this.offsetX = 0;
+			this.offsetY = 0;
+			this.offsetZ = 0;
             this.parser = new Parser();
 			this.startColor = opts.startColor;
 			this.stopColor = opts.stopColor;
@@ -2993,8 +2996,7 @@
                 for (const cmd of l.commands) {
                     if (cmd.gcode == 'g20') {
                         this.setInches();
-                    }
-                    else if (['g0', 'g00', 'g1', 'g01', 'g2', 'g02', 'g3', 'g03'].indexOf(cmd.gcode) > -1) {
+                    } else if (['g0', 'g00', 'g1', 'g01', 'g2', 'g02', 'g3', 'g03'].indexOf(cmd.gcode) > -1) {
                         const g = cmd;
                         const next = {
                             x: (_a = g.params.x) !== null && _a !== void 0 ? _a : state.x,
@@ -3027,7 +3029,11 @@
                         // if (next.e) state.e = next.e; // where not really tracking e as distance (yet) but we only check if some commands are extruding (positive e)
                         if (!this.beyondFirstMove)
                             this.beyondFirstMove = true;
-                    }
+                    } else if (cmd.gcode == 'g54'){
+						this.offsetX = cmd.params.x;
+						this.offsetY = cmd.params.y;
+						this.offsetZ = cmd.params.z;
+					}
                 }
                 if (this.renderExtrusion) {
                     const brightness = Math.round((80 * index) / this.layers.length);
@@ -3089,7 +3095,7 @@
         }
         addLineSegment(layer, p1, p2, extrude) {
             const line = extrude ? layer.extrusion : layer.travel;
-            line.push(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
+            line.push(p1.x+this.offsetX, p1.y+this.offsetY, p1.z+this.offsetZ, p2.x+this.offsetX, p2.y+this.offsetY, p2.z+this.offsetZ);
         }
         addArcSegment(layer, p1, p2, extrude, cw) {
             const line = extrude ? layer.extrusion : layer.travel;
