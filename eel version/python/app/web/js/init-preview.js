@@ -9,9 +9,9 @@ const preview = (window.preview = new GCodePreview.init({
 	canvas: document.querySelector('.gcode-previewer'),
 	topLayerColor: topLayerColor,
 	lastSegmentColor: lastSegmentColor,
-	buildVolume: settings?.buildVolume || {x: 150, y: 150, z: 150},
+	buildVolume: settings?.buildVolume || {x: 250, y: 270, z: 50},
 	initialCameraPosition: [0,400,450],
-	allowDragNDrop: true,
+	allowDragNDrop: false,
 	startColor: [20, 20, 20],
 	stopColor: [200, 200, 200]
 }));
@@ -24,7 +24,7 @@ window.addEventListener('resize', function() {
 	preview.resize();
 });
 
-export function startLoadingProgressive(gcode) {
+export async function startLoadingProgressive(gcode) {
 	let c = 0;
 	function loadProgressive() {
 	  const start = c * chunkSize;

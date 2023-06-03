@@ -139,7 +139,7 @@ p {
     margin-left: 1vw;
 }
 
-#XoY .act:hover, .coordBtn:hover, button:hover, #pause:hover, #resume:hover, #stop:hover, #start:hover{
+#XoY .act:hover, .coordBtn:hover, button:hover, .action:hover{
     opacity: 0.6;
     scale: 1.2;
     cursor: pointer;
@@ -227,4 +227,10 @@ canvas#renderer {
 progress[value] {
     accent-color: #88C0D0;
     width: 100%;
+}
+
+#settings input {
+    border-radius: 0.3vw;
+    border-style: none;
+    outline: none;
 }

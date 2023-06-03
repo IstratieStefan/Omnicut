@@ -30,4 +30,5 @@ SVGinput.onchange = function(){
             console.log("Error while reading file");
         }
 	}
+    preview.resize();
 }
