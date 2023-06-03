@@ -8,7 +8,7 @@
 ![swag](http://ForTheBadge.com/images/badges/built-with-swag.svg)
 <div align = "center">
   <h1> Omnicut </h1>
-  <p> Omnicut is a DIY CNC with a 27 by 27 work area and a modular design. </p>
+  <p> Omnicut is a DIY CNC with a 25 cm by 27 cm work area and a modular design. </p>
 
   ![OMNICUT!](https://github.com/IstratieStefan/Omnicut/blob/main/Renders/Front.PNG)
 </div>
