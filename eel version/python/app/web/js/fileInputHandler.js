@@ -12,9 +12,9 @@ SVGinput.onchange = function(){
             reader.onload = function (evt) {
                 if (document.getElementById('precision') != "" && document.getElementById('multiplier') != ""){
                     console.log(document.getElementById('precision').value, document.getElementById('multiplier'));
-                    let code = convert2Gcode(evt.target.result, +document.getElementById('precision').value, +document.getElementById('multiplier').value);
+                    document.getElementById('SVGtransform').innerHTML = evt.target.result;
+                    let code = convert2Gcode(+document.getElementById('precision').value, +document.getElementById('multiplier').value, +document.getElementById('feed').value, +document.getElementById('ofX').value, +document.getElementById('ofY').value, +document.getElementById('ofZ').value);
                     startLoadingProgressive(code);
-                    console.log(code)
                     document.getElementById('gcode').value = code.replaceAll(' E40', '');
                 } else {
                     alert("You must fill in the precision and the multiplier to submit an SVG file.")
@@ -31,4 +31,10 @@ SVGinput.onchange = function(){
         }
 	}
     preview.resize();
+}
+
+document.getElementById('refresh').onclick = function(){
+    let code = convert2Gcode(+document.getElementById('precision').value, +document.getElementById('multiplier').value, +document.getElementById('feed').value, +document.getElementById('ofX').value, +document.getElementById('ofY').value, +document.getElementById('ofZ').value);
+    startLoadingProgressive(code);
+    document.getElementById('gcode').value = code.replaceAll(' E40', '');
 }

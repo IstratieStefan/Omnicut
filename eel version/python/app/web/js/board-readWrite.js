@@ -1,4 +1,4 @@
-let mainOutput = "", secondOutput = "", advance = false, prevGRBL = "Grbl 0.9j ['$' for help]", commands = [], running = false, index = 0;
+let mainOutput = "", secondOutput = "", prevGRBL = "Grbl 0.9j ['$' for help]", commands = [], index = 0, milling = false, lower = 0;
 
 let ta = document.getElementById('gcode');
 let cl = document.getElementById('commandLine');
@@ -34,19 +34,37 @@ function readFromMainBoard(){
             let len = mainOutput.length-1;
             for (let i = 0; i < len; i++){
                 if (mainOutput[i][0] == '<'){
-                    console.log(mainOutput[i]);
                     let data = mainOutput[i].split(':')[1].split(',');
                     document.getElementById('Xval').innerHTML = data[0];
                     document.getElementById('Yval').innerHTML = data[1];
                     document.getElementById('Zval').innerHTML = data[2];
-                    if ((data[0] < 0 || data[0] > 250 || data[1] < 0 || data[1] > 270 || data[2] < 0 || data[2] > 69) && limits){
+                    if ((data[0] < 0 || data[0] > 250 || data[1] < 0 || data[1] > 270 || data[2]+(+document.getElementById('Tdepth').value) < 0 || data[2] > 69) && limits){
                         commands = [`\x18`];
                         index = 0;
                         evalNext();
                     }
                 } else if (mainOutput[i].includes('end')) {
                     if (index < commands.length){
+                        document.getElementById('file').value = +document.getElementById('file').value+1;
                         evalNext();
+                    } else if (milling) {
+                        if (lower < +document.getElementById('Tdepth').value){
+                            if (lower+(+document.getElementById('depth').value) >= +document.getElementById('Tdepth').value){
+                                lower = +document.getElementById('Tdepth').value;
+                            } else {
+                                lower += +document.getElementById('depth').value;
+                            }
+                            index = 0;
+                            commands[commands.length-1] = `G0 X0 Y0 Z-${lower}`;
+                            evalNext();
+                        } else {
+                            commands = [`G0 X0 Y0 Z0`];
+                            index = 0;
+                            milling = false;
+                            document.getElementById('file').value = 0;
+                            lower = 0;
+                            evalNext();
+                        }
                     }
                 } else if (!mainOutput[i].includes('ok')){
                     ch.value += mainOutput[i] + '\n';
@@ -64,23 +82,40 @@ function ask(){
 }
 
 document.getElementById('draw').onclick = function(){
-    running = true;
-    commands = document.getElementById('gcode').value.split('\n');
-    index = 0;
-    evalNext();
+    if (limits){
+        commands = document.getElementById('gcode').value.split('\n');
+        document.getElementById('file').value = 0;
+        document.getElementById('file').max = commands.length;
+        index = 0;
+        evalNext();
+    } else {
+        alert("Can't draw while limits are turned off!")
+    }
+    
 }
 
 document.getElementById('cut').onclick = function(){
-    running = true;
-    commands = document.getElementById('gcode').value.split('\n');
-    index = 0;
-    evalNext();
+    if (!limits){
+        alert("Can't cut while limits are turned off!");
+    } else if (+document.getElementById('spindle').innerHTML.replace(' %', '') < 50){
+        alert("Spindle speed must be over 50% to cut!")
+    } else {
+        commands = document.getElementById('gcode').value.split('\n');
+        commands.push(`G0 X0 Y0 Z-${lower}`);
+        document.getElementById('file').value = 0;
+        document.getElementById('file').max = commands.length;
+        index = 0;
+        milling = true;
+        evalNext();
+    }
 }
 
 function evalNext(){
-    console.log(commands[index]);
+    document.getElementById('command').innerHTML = commands[index];
     eel.evalGcode(commands[index]);
-    index++;
+    do {
+        index++;
+    } while (commands[index] == "" && index < commands.length);
 }
 
 /* old "eel-comunication.js" file starts from here */
@@ -175,7 +210,7 @@ cl.onkeyup = function(e){
 			ch.value = '';
 		} else if (cl.value == '*limits'){
             limits = !limits;
-            ch.value += `>>> *limits\nLimits set to ${limits}`;
+            ch.value += `>>> *limits\nLimits set to ${limits}\n`;
         } else {
 			ch.value += `>>> ${cl.value}\n`;
 			ch.scrollTop = ch.scrollHeight;

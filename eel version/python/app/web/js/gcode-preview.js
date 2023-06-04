@@ -3029,11 +3029,7 @@
                         // if (next.e) state.e = next.e; // where not really tracking e as distance (yet) but we only check if some commands are extruding (positive e)
                         if (!this.beyondFirstMove)
                             this.beyondFirstMove = true;
-                    } else if (cmd.gcode == 'g54'){
-						this.offsetX = cmd.params.x;
-						this.offsetY = cmd.params.y;
-						this.offsetZ = cmd.params.z;
-					}
+                    }
                 }
                 if (this.renderExtrusion) {
                     const brightness = Math.round((80 * index) / this.layers.length);

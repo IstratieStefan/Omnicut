@@ -380,7 +380,7 @@ void loop() {
 	if (digitalRead(button) == HIGH){
 			if (ok){
 				ok = 0;
-				page = (page+1)%6;
+				page = (page+1)%5;
 			}
 	} else {
 		ok = 1;
