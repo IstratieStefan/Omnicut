@@ -6,7 +6,9 @@ export function convert2Gcode(precision, multiplier, feed, offsetX, offsetY, off
     let final = "";
     let pathTypes = [
         document.getElementById('SVGtransform').getElementsByTagName('path'),
-        document.getElementById('SVGtransform').getElementsByTagName('polygon')
+        document.getElementById('SVGtransform').getElementsByTagName('circle'),
+        document.getElementById('SVGtransform').getElementsByTagName('rect'),
+        document.getElementById('SVGtransform').getElementsByTagName('ellipse'),
     ];
     let lastX, lastY;
     let raised = 1;
