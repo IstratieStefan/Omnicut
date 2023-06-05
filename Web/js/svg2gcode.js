@@ -24,6 +24,7 @@ export function convert2Gcode(precision, multiplier, feed, offsetX, offsetY, off
         for (let i = 0; i < pathTypes[j].length; i++){ //for each path in a path type
             let len = pathTypes[j][i].getTotalLength(); //get length
             var pt = pathTypes[j][i].getPointAtLength(0); //get starting point
+            raise(1);
             final += `G0 X${(pt.x*multiplier+offsetX).toFixed(3)} Y${(pt.y*multiplier+offsetY).toFixed(3)}\n`;
             lastX = pt.x, lastY = pt.y;
             raise(0);

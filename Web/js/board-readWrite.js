@@ -114,6 +114,7 @@ function cut(){ //see documentation
 function evalNext(){ //see documentation
     document.getElementById('command').innerHTML = commands[index];
     eel.evalGcode(commands[index]);
+    console.log(commands[index]);
     do {
         index++;
     } while (commands[index] == "" && index < commands.length);
