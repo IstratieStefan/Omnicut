@@ -8,6 +8,14 @@
 ![swag](http://ForTheBadge.com/images/badges/built-with-swag.svg)
 
 # Table of Contents
+- Description
+- Components
+- CAD
+- Usage
+- Mechanics
+- Electronics
+- Software
+- Programming
 
 <div align = "center">
   <h1> Omnicut </h1>
@@ -44,9 +52,11 @@
 
 # CAD
 
-F360 files are provided
+The 3D model and realistic renders of the CNC system were meticulously created using Fusion 360, a powerful CAD software known for its versatility and precision. To ensure durability and reliability, the individual parts of the CNC system were 3D printed using PETG filament. PETG (Polyethylene Terephthalate Glycol-Modified) is a popular material choice due to its excellent strength, impact resistance, and heat resistance properties. For your convenience, the CAD files of the 3D models are thoughtfully provided in the designated CAD folder. These files empower users to explore further customization, modifications, or replication of the CNC system components as per their specific requirements.
 
 # I. Usage
+
+The Omnicut CNC system is a versatile tool capable of precisely drawing SVG designs and cutting a wide range of materials. While it has been primarily tested with PCB plating, it offers the potential to create high-quality PCBs for prototyping and other electronics projects. With its capability for precision cutting, it empowers users to explore diverse materials and bring their creative ideas to life in the realm of electronics and beyond.
 
 # II. Mechanics
 The Omnicut CNC system is equipped with four NEMA17 Stepper motors, with one dedicated to the X-axis, two for the Y-axis, and one for the Z-axis. In place of a traditional spindle, it utilizes a 775 motor, which adds versatility to the system. The CNC follows a cartesian system, providing three degrees of freedom (3 DOF) for precise movement and control.
