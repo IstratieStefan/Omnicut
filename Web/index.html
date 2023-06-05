@@ -69,8 +69,9 @@
                 </div>
             </div>
             <div style="padding: 1vw">
-                <div id="source" style="height: 25%; display: flex; text-align: center;">
-                    <textarea id="gcode" style="width: 100%; resize: none; outline: none; height: 100%; border-radius: 2vh; padding-left: 2vh; box-shadow: 0px 3px 6px #000000;" placeholder="G-code" readonly="true"></textarea>
+                <div id="source" style="height: 25%; display: flex; text-align: center; flex-direction: column;">
+                    <textarea id="gcode" style="width: 100%; resize: none; outline: none; height: 90%; border-top-left-radius: 2vh; border-top-right-radius: 2vh; padding-left: 2vh; box-shadow: 0px 3px 6px #000000;" placeholder="G-code"></textarea>
+                    <button id="reload" style="width: 100%; resize: none; outline: none; height: 10%; border-bottom-left-radius: 2vh; border-bottom-right-radius: 2vh; padding-left: 2vh; box-shadow: 0px 3px 6px #000000; border-style: none;">Reload model</button>
                 </div>
                 <div id="progress" style=" height: 15%;">
                     <progress id="file" value="0" max="0"></progress>
@@ -204,7 +205,6 @@
     <script src="js/svg2gcode.js" type="module"></script>
     <script src="js/init-preview.js" type="module"></script>
     <script src="js/fileInputHandler.js" type="module"></script>
-    <script src="js/controller-handler.js"></script>
     <script src="js/board-readWrite.js"></script>
   </body>
 </html>

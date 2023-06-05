@@ -1,5 +1,5 @@
 body {
-    background-image: url('./images/back.svg');
+    background-image: url('./Assets/back.svg');
     background-repeat: no-repeat;
     background-size: 100% 100%;
 }
@@ -234,4 +234,10 @@ progress[value] {
     border-style: none;
     outline: none;
     background-color: #D8DEE9;
+}
+
+#reload:hover {
+    opacity: 0.6;
+    scale: 1;
+    cursor: pointer;
 }

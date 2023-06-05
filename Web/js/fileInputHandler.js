@@ -38,3 +38,8 @@ document.getElementById('refresh').onclick = function(){
     startLoadingProgressive(code);
     document.getElementById('gcode').value = code.replaceAll(' E40', '');
 }
+
+document.getElementById('reload').onclick = function(){
+    startLoadingProgressive(document.getElementById('gcode').value);
+    preview.resize();
+}

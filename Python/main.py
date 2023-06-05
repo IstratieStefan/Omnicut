@@ -2,7 +2,7 @@ import eel
 import serial, serial.tools.list_ports
 from time import sleep
 
-eel.init(".\\eel version\\python\\app\\web")
+eel.init(".\\web")
 
 ser_main = serial.Serial('COM6', baudrate=115200, bytesize=8, parity='N', stopbits=1)
 ser_second = serial.Serial('COM5', baudrate=115200, bytesize=8, parity='N', stopbits=1)
