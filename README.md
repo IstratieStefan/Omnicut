@@ -44,9 +44,13 @@
 
 F360 files are provided
 
-# Hardware
+# I. Usage
 
-# Software
+# II. Mechanics
+
+# III. Electronics
+
+# IV. Software
 
 Omnicut was programmed in a variety of languages: C++ (for the Arduino), HTML, CSS, JavaScript and Python.
 
@@ -61,7 +65,7 @@ Let's describe each part of the project.
 ## The user interface (the app)
 
 The user interface was created using HTML, CSS and JavaScript.
-Looking at the app, we notice that the app is split into 2 main parts that apear right after the loading screen. On the left, we have, starting from top to bottom: a positioning section with 2 subdivisions (relative movement and current position; A g-code text area; A progress viewer and a console. On the right, we have a header with double functionality, those being monitoring (monitoring the state of the spindle and fans, as well as seeing the current temperature and humidity) and file settings (opening a  g-code or an SVG file, as well as editing an SVG file in multiple ways); a g-code viewer and a button to toggle between the functionalities of the header.
+Looking at the app, we notice that the app is split into 2 main parts that apear right after the loading screen. On the left, we have, starting from top to bottom: a positioning section with 2 subdivisions (relative movement and current position; A g-code text area; A progress viewer and a console. On the right, we have a header with double functionality, those being monitoring (monitoring the state of the spindle and fans, as well as seeing the current temperature and humidity) and file settings (opening a  g-code or an SVG file, as well as editing an SVG file in multiple ways); an action bar; a g-code viewer and a button to toggle between the functionalities of the header.
 
 ### 1. Positioning section
 
@@ -106,3 +110,51 @@ The monitoring tab section is where we can see the data about the CNC.
 The first column displays the humidity and temperature of the working zone.
 The second column displays the humidity and temperature of the components zone.
 The third column displays the current speed of the spindle and the 3 fans.
+
+### 6. File settings
+
+The file settings tab section was made to allow the user to influence the model loaded from an SVG. !!! The model editor only works for models loaded from SVG files, not for directly loaded g-code files !!!
+
+|Option|Description|
+|-|-|
+|Rise level|Specifies how much will the spindle rise to move to another section of the drawing/milling without cutting. This value is relative|
+|Model precision|Specifies the number of pixels out of the entire SVG model that will be used to create the g-code for that SVG. A lower precision will take less time to compile, but will make the quality of the drawing worse|
+|Size multiplier|A number that can increase/decrease the size of a model|
+|Offset X|Specifies how much the model needs to be shifted on the X axis (mm)|
+|Offset Y|Specifies how much the model needs to be shifted on the Y axis (mm)|
+|Offset Z|Specifies how much the model needs to be shifted on the Z axis (mm)|
+|Feed rate|Specifies the feed rate for a g-code file we create. (recommended drawing feed rate = 250; recommended milling feed rate = 100)|
+|Step depth|When milling, specifies how much will the spindle go lower each time it cuts the model (mm)|
+|Total depth|When milling, specifies how much does the spindle needs to cut out of the model (mm)|
+
+The file settings section also has a file input to load a file (SVG or g-code) into the model and a refresh button to reload the model after some modifications. Remember! Any modifications directly made in the text g-code viewer will be deleted when you hit refresh!
+
+### 7. Action bar
+
+The action bar contains 5 useful buttons that will help you control the CNC.
+The stop button is used to completely stop the CNC instantly, after you use it, you might need to run the $X command - see GRBL commands.
+The pause button is used to pause a running action/process.
+The start button is used to resume a running action/process.
+The drawing button is used to draw the current model.
+The milling button is used to cut the current model.
+
+The difference between the last 2 buttons is that one of them will only cycle once trough the code, the other one will cycle and lower every time until the total depth is reached.
+
+### 8. G-code viewer
+
+A simple g-code 3d viewer where you can preview the model. You can move around the model using the mouse buttons.
+
+### 9. Toggle button
+
+A button that toggles between the file settings mode and the monitoriong mode.
+
+
+## Controller usage
+
+Up to this point in time, only Playstation 4 DualShock controller and XBOX 360 controller have been tested, however other controllers should work just fine. The controlls for all controllers should be the ones from the image.
+
+![image2](https://github.com/IstratieStefan/Omnicut/assets/77077774/fe67cd49-5762-4849-a6b5-c97b2560d69f)
+
+## 
+
+
