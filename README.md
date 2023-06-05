@@ -4,13 +4,14 @@
 ![Html](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![Css](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 ![Github](https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white)
+
 ![swag](http://ForTheBadge.com/images/badges/built-with-swag.svg)
 
 # Table of Contents
 
 <div align = "center">
   <h1> Omnicut </h1>
-  <p> Omnicut is a DIY CNC with a 25 cm by 27 cm work area and a modular design that can cut and draw </p>
+  <p> Omnicut is an impressive do-it-yourself (DIY) CNC system featuring a spacious work area measuring 25 cm by 27 cm. Its modular design allows for both cutting and drawing functionalities, providing users with versatile capabilities to bring their creative ideas to life. </p>
 
   ![OMNICUT!](https://github.com/IstratieStefan/Omnicut/blob/main/Renders/Front.PNG)
 </div>
@@ -48,9 +49,24 @@ F360 files are provided
 # I. Usage
 
 # II. Mechanics
+The Omnicut CNC system is equipped with four NEMA17 Stepper motors, with one dedicated to the X-axis, two for the Y-axis, and one for the Z-axis. In place of a traditional spindle, it utilizes a 775 motor, which adds versatility to the system. The CNC follows a cartesian system, providing three degrees of freedom (3 DOF) for precise movement and control.
+
+![Mechanics](https://github.com/IstratieStefan/Omnicut/blob/main/Renders/Top.png)
+
+One of the remarkable features of this system is its tool-swapping capability. By simply using four M4 screws, users can effortlessly replace the spindle with alternative attachments such as a pen holder or other compatible tools. This versatility enables a wide range of applications, making the Omnicut CNC an adaptable tool for various creative endeavors.
 
 # III. Electronics
+![Electronics](https://github.com/IstratieStefan/Omnicut/blob/main/Gallery/Electronics.png)
+The CNC system utilizes two Arduino UNOs to enhance its functionality. One Arduino is dedicated to handling the LCD menu, controlling the spindle speed, fan speed, temperature monitoring, and activating the temperature alarm through the active buzzer. The second Arduino is responsible for controlling the motors using a CNC shield and four stepper controllers.
 
+The CNC system incorporates an intuitive menu system with the help of an I2C LCD display. This display allows users to conveniently view and navigate through different tabs, providing easy access to relevant information. To cycle through the tabs effortlessly, a dedicated button is integrated into the menu interface.
+
+![MENU](https://github.com/IstratieStefan/Omnicut/blob/main/Renders/menu.PNG)
+In addition, the CNC system features a rotary encoder that enables users to make quick and precise speed adjustments. By rotating the encoder, users can easily change the spindle speed or other relevant parameters, enhancing control and customization options.
+
+To ensure optimal conditions during CNC operations, the system incorporates two DHT11 sensors to monitor both the temperature and humidity levels of two crucial areas: the cutting area and the electronics compartment. These sensors provide real-time data on temperature and humidity, allowing users to maintain an ideal environment for effective and safe CNC operations.
+
+To control the spindle speed, the CNC system employs a L298N DC motor controller. This motor controller is specifically designed to regulate and adjust the speed of the spindle motor, providing precise control over its rotational speed.
 # IV. Software
 
 Omnicut was programmed in a variety of languages: C++ (for the Arduino), HTML, CSS, JavaScript and Python.
