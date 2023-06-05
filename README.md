@@ -156,6 +156,6 @@ Up to this point in time, only Playstation 4 DualShock controller and XBOX 360 c
 
 ![image2](https://github.com/IstratieStefan/Omnicut/assets/77077774/fe67cd49-5762-4849-a6b5-c97b2560d69f)
 
-## 
+## Programming
 
-
+You can find the programming documentation in the Documentation folder.
