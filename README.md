@@ -4,9 +4,10 @@
 ![Html](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![Css](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 ![Github](https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white)
-
 ![swag](http://ForTheBadge.com/images/badges/built-with-swag.svg)
-# Introduction
+
+# Table of Contents
+
 <div align = "center">
   <h1> Omnicut </h1>
   <p> Omnicut is a DIY CNC with a 25 cm by 27 cm work area and a modular design that can cut and draw </p>
@@ -62,7 +63,7 @@ The project is made up of 3 main components:
 </ul>
 
 Let's describe each part of the project.
-## The user interface (the app)
+## The application
 
 The user interface was created using HTML, CSS and JavaScript.
 Looking at the app, we notice that the app is split into 2 main parts that apear right after the loading screen. On the left, we have, starting from top to bottom: a positioning section with 2 subdivisions (relative movement and current position; A g-code text area; A progress viewer and a console. On the right, we have a header with double functionality, those being monitoring (monitoring the state of the spindle and fans, as well as seeing the current temperature and humidity) and file settings (opening a  g-code or an SVG file, as well as editing an SVG file in multiple ways); an action bar; a g-code viewer and a button to toggle between the functionalities of the header.
