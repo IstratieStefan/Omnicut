@@ -1,0 +1,17 @@
+{
+    "main": {
+        "port": "COM6",
+        "baudrate": 115200,
+        "bytesize": 8,
+        "parity": "N",
+        "stopbits": 1
+    },
+    "second": {
+        "port": "COM5",
+        "baudrate": 115200,
+        "bytesize": 8,
+        "parity": "N",
+        "stopbits": 1
+    },
+    "web_path": "..\\Web"
+}
