@@ -1,10 +1,12 @@
 #include <LiquidCrystal_I2C.h>
 #include <dht11.h>
 
+//pins
 const short DHTPin1 = 4, DHTPin2 = 7;
 const short button = 2, vent = 5, buzzer = 3;
 const short enc1 = 11, enc2 = 12, encP = 6;
 const short enB = 10, in3 = 8, in4 = 9;
+//variables needed
 short currentTopHumidity, currentBottomHumidity, currentTopTemperature, currentBottomTemperature;
 short currentFanSpeed = 0, currentSpindleSpeed = 0;
 short currentFanStage = 0;
@@ -19,6 +21,7 @@ short page = 0, lastPage = 1, progress = 50;
 
 int chk, i;
 
+//icons
 byte temp1[] = {
 	B00000,
 	B00001,
@@ -217,11 +220,11 @@ byte gear4[] = {
 	B00000
 };
 
-dht11 DHT11;
+dht11 DHT11; //initialising  DHT11
 
-LiquidCrystal_I2C lcd(0x27, 16, 2);
+LiquidCrystal_I2C lcd(0x27, 16, 2); //initialising  LiquidCrystal_I2C
 
-void icon(){
+void icon(){ //see documentation
 	lcd.setCursor(0, 0);
 	lcd.write(0);
 	lcd.setCursor(1, 0);
@@ -232,14 +235,14 @@ void icon(){
 	lcd.write(3);
 }
 
-void displayHome(){
+void displayHome(){ //see documentation
 		lcd.setCursor(4, 0);
 		lcd.print("Omnicut");
 		lcd.setCursor(2, 1);
 		lcd.print("Versiunea 7.4");
 }
 
-void displayTemperature(){
+void displayTemperature(){ //see documentation
 		icon();
 		lcd.setCursor(3, 0);
 		lcd.print("Temperatura:");
@@ -258,7 +261,7 @@ void displayTemperature(){
 		lcd.print("C"); 
 }
 
-void displayHumidity(){
+void displayHumidity(){ //see documentation
 		icon();
 		lcd.setCursor(3, 0);
 		lcd.print("Umiditate:");
@@ -273,7 +276,7 @@ void displayHumidity(){
 		lcd.print("%");
 }
 
-void displaySpindleSpeed(){
+void displaySpindleSpeed(){ //see documentation
 		icon();
 		lcd.setCursor(3, 0);
 		lcd.print("Spindle:");
@@ -283,7 +286,7 @@ void displaySpindleSpeed(){
 		lcd.print("%");
 }
 
-void displayFanSpeed(){
+void displayFanSpeed(){ //see documentation
 		icon();
 		lcd.setCursor(3, 0);
 		lcd.print("Vent:");
@@ -295,7 +298,7 @@ void displayFanSpeed(){
 		lcd.print(fanMode?"M":"A");
 }
 
-void displayProgress(){
+void displayProgress(){ //future feature; not implemented yet. You can ignore
 		lcd.setCursor(0, 0);
 		lcd.print("Progres:");
 		lcd.setCursor(10, 0);
@@ -304,7 +307,7 @@ void displayProgress(){
 		lcd.print("%");
 }
 
-void setup() {
+void setup() { //see documentation
 	Serial.begin(115200);
 	pinMode(vent, OUTPUT);
 	pinMode(buzzer, OUTPUT);
@@ -326,10 +329,12 @@ void setup() {
 }
 
 void loop() {
-	aState = digitalRead(enc1);
+	aState = digitalRead(enc1); // reads encoder state
 	++counter;
-	if (counter == 32000){
-		counter = 0;
+	if (counter == 32000){ //executes once in a while (when counter reaches 32000). This action was taken because of the time required by DHT11 to read
+		counter = 0; //reset counter
+
+		//read and update sensor values
 		chk = DHT11.read(DHTPin1);
 		currentTopHumidity = round((float)DHT11.humidity);
 		currentTopTemperature = round((float)DHT11.temperature);
@@ -338,6 +343,7 @@ void loop() {
 		currentBottomHumidity = round((float)DHT11.humidity);
 		currentBottomTemperature = round((float)DHT11.temperature);
 
+		//send data to Serial so that python can read it
 		data[3] = currentTopTemperature+(currentTopTemperature==0);
 		data[4] = currentBottomTemperature+(currentBottomTemperature==0);
 		data[5] = currentTopHumidity+(currentTopHumidity==0);
@@ -346,15 +352,16 @@ void loop() {
 		data[8] = currentSpindleSpeed+(currentSpindleSpeed==0);
 		Serial.println(data);
 		
-		if (!fanMode){
-			if (!(currentTopTemperature <= fanLimits[currentFanStage][0] && currentBottomTemperature <= fanLimits[currentFanStage][0] && (currentTopTemperature > fanLimits[currentFanStage-1][0] && currentBottomTemperature > fanLimits[currentFanStage-1][0]))){
-				for (i = 0, ok2 = 1; i < limitLength && ok2; ++i){
+		if (!fanMode){ //if fanMode is automatic
+			if (!(currentTopTemperature <= fanLimits[currentFanStage][0] && currentBottomTemperature <= fanLimits[currentFanStage][0] && (currentTopTemperature > fanLimits[currentFanStage-1][0] && currentBottomTemperature > fanLimits[currentFanStage-1][0]))){ //only update if fans should change speed
+				for (i = 0, ok2 = 1; i < limitLength && ok2; ++i){ // loops trough the temperature limits until the desired one is reached
 					if (currentTopTemperature <= fanLimits[i][0] && currentBottomTemperature <= fanLimits[i][0]) {
 						ok2 = 0;
 						currentFanSpeed = fanLimits[i][1];
 						currentFanStage = i;
 					}
 				}
+				//update fan speed and alert
 				analogWrite(vent, currentFanSpeed);
 				if (currentFanSpeed == 255){
 					digitalWrite(buzzer, HIGH);
@@ -363,7 +370,8 @@ void loop() {
 					alert = 0;
 					digitalWrite(buzzer, LOW);
 				}
-				if (page == 4){
+
+				if (page == 4){ // if we're on the temperature page, also update temperature
 					for (i = currentFanSpeed*13/255+2; i > 2; i--){
 						lcd.setCursor(i, 1);
 						lcd.write(5); 
@@ -377,6 +385,7 @@ void loop() {
 		}
 	}
 	
+	//check and handle if button was presssed
 	if (digitalRead(button) == HIGH){
 			if (ok){
 				ok = 0;
@@ -386,7 +395,7 @@ void loop() {
 		ok = 1;
 	}
 	
-	if (lastPage != page){
+	if (lastPage != page){ //if page was changed, render the current page
 		lcd.clear();
 		 lastPage = page;
 		 switch (page){
@@ -460,7 +469,7 @@ void loop() {
 				break;
 		}
 	}
-	switch (page){
+	switch (page){ //update changing values on current page
 		case 1:
 			lcd.setCursor(4, 1);
 			lcd.print(currentTopTemperature);
@@ -471,7 +480,7 @@ void loop() {
 		case 2:
 			lcd.setCursor(4, 1);
 			lcd.print(currentTopHumidity);
-			lcd.setCursor(4, 1);
+			lcd.setCursor(10, 1);
 			lcd.print(currentBottomHumidity);
 			break;
 				
@@ -487,7 +496,7 @@ void loop() {
 			break;
 	}
 	
-	if (aState != aLastState){
+	if (aState != aLastState){ //check if the encoder was moved
 		if (page == 4 && fanMode){
 			if (digitalRead(enc2) != aState) {
 				currentFanSpeed += 13;
@@ -539,7 +548,7 @@ void loop() {
 		}
 	} 
 	aLastState = aState;
-	if (digitalRead(encP) == HIGH){
+	if (digitalRead(encP) == HIGH){ //check and handle if the encoder button was pressed
 		if (ok3){
 			ok3 = 0;
 			if (page == 4){

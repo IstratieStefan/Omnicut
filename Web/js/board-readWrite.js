@@ -1,4 +1,6 @@
-let mainOutput = "", secondOutput = "", prevGRBL = "Grbl 0.9j ['$' for help]", commands = [], index = 0, milling = false, lower = 0;
+import { isOutside, isLoaded } from "./svg2gcode.js";
+
+let mainOutput = "", secondOutput = "", prevGRBL = "Grbl 0.9j ['$' for help]", commands = [], index = 0, milling = false, lower = 0, running = false;
 
 let ta = document.getElementById('gcode');
 let cl = document.getElementById('commandLine');
@@ -9,8 +11,8 @@ let limits = true;
 
 function readFromSecondBoard(){
     eel.readData()().then(obj => {
-        secondOutput += obj;
-        if (secondOutput.includes('\n')){
+        secondOutput += obj; //the global second output gets the new value appended
+        if (secondOutput.includes('\n')){ //if a command finished (a '\n' was found), update values
             secondOutput = secondOutput.split('\n');
             let data = secondOutput[secondOutput.length-2].split(' ');
             document.getElementById('topTemp').innerHTML = data[3] + " °C";
@@ -19,36 +21,43 @@ function readFromSecondBoard(){
             document.getElementById('bottomHum').innerHTML = data[6] + " %";
             document.getElementById('fan').innerHTML = Math.floor(data[7]*100/255) + " %";
             document.getElementById('spindle').innerHTML = Math.floor(data[8]*100/255) + " %";
-            secondOutput = secondOutput[secondOutput.length-1];
+            secondOutput = secondOutput[secondOutput.length-1]; // the second output is set to the last unfinished sent output
         }
         
-        setTimeout(readFromSecondBoard, 1000);
+        setTimeout(readFromSecondBoard, 1000); //recall the function in 1000ms
     });
 }
 
 function readFromMainBoard(){
     eel.readGRBL()().then(obj => {
-        mainOutput += obj;
-        if (mainOutput.includes('\n')){
+        mainOutput += obj; //the global main output gets the new value appended
+        if (mainOutput.includes('\n')){ //if a command finished (a '\n' was found), update
             mainOutput = mainOutput.split('\n');
             let len = mainOutput.length-1;
-            for (let i = 0; i < len; i++){
-                if (mainOutput[i][0] == '<'){
-                    let data = mainOutput[i].split(':')[1].split(',');
+            for (let i = 0; i < len; i++){ //for each command
+                if (mainOutput[i][0] == '<'){ //if the output starts with '<', it is a "?" command feedback, so update position
+                    let data = mainOutput[i].split(':')[2].split(',');
+                    console.log(mainOutput[i], mainOutput[i].split(':')[2], mainOutput[i].split(':')[2].split(','))
                     document.getElementById('Xval').innerHTML = data[0];
                     document.getElementById('Yval').innerHTML = data[1];
                     document.getElementById('Zval').innerHTML = data[2];
+                    //check if spindle is outside boundaries
                     if ((data[0] < 0 || data[0] > 250 || data[1] < 0 || data[1] > 270 || data[2]+(+document.getElementById('Tdepth').value) < 0 || data[2] > 69) && limits){
                         commands = [`\x18`];
                         index = 0;
                         evalNext();
                     }
-                } else if (mainOutput[i].includes('end')) {
-                    if (index < commands.length){
+                } else if (mainOutput[i][0] == '['){
+                    commands = [`G92 Z19.2`, `G91`, `G0 Z5`, `G90`];
+                    index = 0;
+                    evalNext();
+                } else if (mainOutput[i].includes('end')) { // G-code command finished; send the next one
+                    if (index < commands.length){ // there are still commands to be sent
                         document.getElementById('file').value = +document.getElementById('file').value+1;
                         evalNext();
-                    } else if (milling) {
-                        if (lower < +document.getElementById('Tdepth').value){
+                    } else if (milling) { //the process finished, however we are milling so we might need to start another cycle
+                        document.getElementById('file').max = commands.length * Math.ceil((+document.getElementById('Tdepth').value)/(+document.getElementById('depth').value));
+                        if (lower <= +document.getElementById('Tdepth').value){ // if spindle is not low enough
                             if (lower+(+document.getElementById('depth').value) >= +document.getElementById('Tdepth').value){
                                 lower = +document.getElementById('Tdepth').value;
                             } else {
@@ -57,62 +66,90 @@ function readFromMainBoard(){
                             index = 0;
                             commands[commands.length-1] = `G0 X0 Y0 Z-${lower}`;
                             evalNext();
-                        } else {
+                        } else { // action finished; go to start.
                             commands = [`G0 X0 Y0 Z0`];
                             index = 0;
                             milling = false;
+                            running = false;
                             document.getElementById('file').value = 0;
                             lower = 0;
                             evalNext();
                         }
+                    } else {
+                        running = false;
                     }
-                } else if (!mainOutput[i].includes('ok')){
+                } else if (!mainOutput[i].includes('ok')){ // any other command is given, as long as it is not "ok", will be displayed in command history
                     ch.value += mainOutput[i] + '\n';
                 }
             }
-            mainOutput = mainOutput[mainOutput.length-1];
+            mainOutput = mainOutput[mainOutput.length-1]; // the main output is set to the last unfinished sent output
         }
-        setTimeout(readFromMainBoard, 100);
+        setTimeout(readFromMainBoard, 100); //recall the function in 100ms
     });
 }
 
-function ask(){
+function ask(){ //see documentation
     eel.evalGcode('?');
-    setTimeout(ask, 200);
+    setTimeout(ask, 200); //recall the function in 200ms
 }
 
-document.getElementById('draw').onclick = function(){
+function draw(){ //see documentation
+    if (!isLoaded()){
+        alert("No model was loaded!");
+        return;
+    }
+
+    if (isOutside()){
+        if (!confirm("Movement is outside pre-determined volume (X and Y). Continue?")){
+            return;
+        }
+    }
+
     if (limits){
         commands = document.getElementById('gcode').value.split('\n');
         document.getElementById('file').value = 0;
         document.getElementById('file').max = commands.length;
         index = 0;
+        running = true;
         evalNext();
     } else {
         alert("Can't draw while limits are turned off!")
     }
-    
 }
 
-document.getElementById('cut').onclick = function(){
+function cut(){ //see documentation
+    if (!isLoaded()){
+        alert("No model was loaded!");
+        return;
+    }
+    
+    if (isOutside()){
+        if (!confirm("Movement is outside pre-determined volume (X and Y). Continue?")){
+            return;
+        }
+    }
+
     if (!limits){
         alert("Can't cut while limits are turned off!");
     } else if (+document.getElementById('spindle').innerHTML.replace(' %', '') < 50){
         alert("Spindle speed must be over 50% to cut!")
     } else {
+        running = true;
         commands = document.getElementById('gcode').value.split('\n');
         commands.push(`G0 X0 Y0 Z-${lower}`);
+        lower = +document.getElementById('depth').value;
         document.getElementById('file').value = 0;
-        document.getElementById('file').max = commands.length;
+        document.getElementById('file').max = commands.length * Math.ceil((+document.getElementById('Tdepth').value)/(+document.getElementById('depth').value));
         index = 0;
         milling = true;
         evalNext();
     }
 }
 
-function evalNext(){
+function evalNext(){ //see documentation
     document.getElementById('command').innerHTML = commands[index];
     eel.evalGcode(commands[index]);
+    console.log(commands[index]);
     do {
         index++;
     } while (commands[index] == "" && index < commands.length);
@@ -120,7 +157,7 @@ function evalNext(){
 
 /* old "eel-comunication.js" file starts from here */
 
-document.getElementById('up').onclick = function(){
+function up(){ //see documentation
 	if (step.value == ""){
 		step.value = 5;
 	}
@@ -129,7 +166,7 @@ document.getElementById('up').onclick = function(){
     evalNext();
 }
 
-document.getElementById('down').onclick = function(){
+function down(){ //see documentation
 	if (step.value == ""){
 		step.value = 5;
 	}
@@ -138,7 +175,7 @@ document.getElementById('down').onclick = function(){
     evalNext();
 }
 
-document.getElementById('forward').onclick = function(){
+function forward(){ //see documentation
 	if (step.value == ""){
 		step.value = 5;
 	}
@@ -147,7 +184,7 @@ document.getElementById('forward').onclick = function(){
     evalNext();
 }
 
-document.getElementById('backward').onclick = function(){
+function backward(){ //see documentation
 	if (step.value == ""){
 		step.value = 5;
 	}
@@ -156,7 +193,7 @@ document.getElementById('backward').onclick = function(){
     evalNext();
 }
 
-document.getElementById('left').onclick = function(){
+function left(){ //see documentation
 	if (step.value == ""){
 		step.value = 5;
 	}
@@ -165,7 +202,7 @@ document.getElementById('left').onclick = function(){
     evalNext();
 }
 
-document.getElementById('right').onclick = function(){
+function right(){ //see documentation
 	if (step.value == ""){
 		step.value = 5;
 	}
@@ -174,44 +211,47 @@ document.getElementById('right').onclick = function(){
     evalNext();
 }
 
-document.getElementById('center').onclick = function(){
+function center(){ //see documentation
     commands = [`G0 X0 Y0 Z0`];
 	index = 0;
     evalNext();
 }
 
-/*document.getElementById('reset').onclick = function(){
-    commands = [`G92 X0 Y0 Z0`];
-	index = 0;
-    evalNext();
-}*/
-
-document.getElementById('stop').onclick = function(){
+function stopp(){ //see documentation
+    running = false;
 	commands = [`\x18`];
 	index = 0;
     evalNext();
 }
 
-document.getElementById('pause').onclick = function(){
+function pause(){ //see documentation
 	commands = [`!`];
 	index = 0;
     evalNext();
 }
 
-document.getElementById('resume').onclick = function(){
+function resume(){ //see documentation
 	commands = [`~`];
 	index = 0;
     evalNext();
 }
 
-cl.onkeyup = function(e){
+function zprobe(){
+    if (!running){
+        commands = [`G38.2 F${+document.getElementById('zfeed').value} Z${-(+document.getElementById('ztravel').value)}`];
+        index = 0;
+        evalNext();
+    }
+}
+
+function keyUp(e){
 	if (e.key === "Enter" && cl.value != ""){
-		if (cl.value == '*clear'){
+		if (cl.value == '*clear'){ //if value is *clear, then clears history
 			ch.value = '';
-		} else if (cl.value == '*limits'){
+		} else if (cl.value == '*limits'){ //if value is *limits, toggles limits
             limits = !limits;
             ch.value += `>>> *limits\nLimits set to ${limits}\n`;
-        } else {
+        } else { //otherwise, execute command via GRBL
 			ch.value += `>>> ${cl.value}\n`;
 			ch.scrollTop = ch.scrollHeight;
 			commands = [cl.value];
@@ -223,7 +263,7 @@ cl.onkeyup = function(e){
 }
 
 eel.expose(sendGcodeFeedback);
-function sendGcodeFeedback(msg){
+function sendGcodeFeedback(msg){ //see documentation
 	ch.value += msg + '\n';
 }
 
@@ -231,28 +271,26 @@ let controllerIndex = null;
 let leftPressed = 0;
 let ok1 = 0, ok2 = 0, ok3 = 0, ok4 = 0, ok5 = 0, ok6 = 0, ok7 = 0, ok8 = 0, ok9 = 0;
 
-window.addEventListener('gamepadconnected', function(e){
+function gamepadconnected(e){ //see documentation
     controllerIndex = e.gamepad.index;
-    console.log('gasit')
-});
+}
 
-window.addEventListener('gamepaddisconnected', function(e){
+function gamepaddisconnected(){ //see documentation
     controllerIndex = null;
-});
+}
 
 step = document.getElementById('stepSize');
 
 function readControlls(){
-    if (controllerIndex != null){
+    if (controllerIndex != null){ //if a controller was found
         let gp = navigator.getGamepads()[controllerIndex];
+        //The next conditions check if all of the following buttons are or aren't being pressed and act accordingly
         if (gp.buttons[12].pressed){
             if (!ok1){
                 if (step.value == ""){
                     step.value = 5;
                 }
-                commands = ["G91", `G0 X0 Y${+step.value} Z0`, "G90"];
-                index = 0;
-                evalNext();
+                left();
                 ok1 = 1;
             }
         } else {
@@ -264,9 +302,7 @@ function readControlls(){
                 if (step.value == ""){
                     step.value = 5;
                 }
-                commands = ["G91", `G0 X0 Y${-step.value} Z0`, "G90"];
-                index = 0;
-                evalNext();
+                right();
                 ok2 = 1;
             }
         } else {
@@ -278,9 +314,7 @@ function readControlls(){
                 if (step.value == ""){
                     step.value = 5;
                 }
-                commands = ["G91", `G0 X${-step.value} Y0 Z0`, "G90"];
-                index = 0;
-                evalNext();
+                forward();
                 ok3 = 1;
             }
         } else {
@@ -292,9 +326,7 @@ function readControlls(){
                 if (step.value == ""){
                     step.value = 5;
                 }
-                commands = ["G91", `G0 X${+step.value} Y0 Z0`, "G90"];
-                index = 0;
-                evalNext();
+                backward();
                 ok4 = 1;
             }
         } else {
@@ -306,9 +338,7 @@ function readControlls(){
                 if (step.value == ""){
                     step.value = 5;
                 }
-                commands = ["G91", `G0 X0 Y0 Z${-step.value}`, "G90"];
-                index = 0;
-                evalNext();
+                down();
                 ok5 = 1;
             }
         } else {
@@ -320,9 +350,7 @@ function readControlls(){
                 if (step.value == ""){
                     step.value = 5;
                 }
-                commands = ["G91", `G0 X0 Y0 Z${+step.value}`, "G90"];
-                index = 0;
-                evalNext();
+                up();
                 ok6 = 1;
             }
         } else {
@@ -355,21 +383,40 @@ function readControlls(){
 
         if (gp.buttons[8].pressed){
             if (!ok9){
-                commands = [`G0 X0 Y0 Z0`];
-                index = 0;
-                evalNext();
+                center();
                 ok9 = 1;
             }
         } else {
             ok9 = 0;
         }
     }
-    setTimeout(readControlls, 50);
+    setTimeout(readControlls, 50); //recall the function in 50ms
 }
 
 eel.readSerial();
 
+//starting loops for the functions
 setTimeout(readFromSecondBoard, 1000);
 setTimeout(readFromMainBoard, 100);
 setTimeout(ask, 200);
 setTimeout(readControlls, 50);
+
+//setting event listeners
+document.getElementById('draw').onclick = draw;
+document.getElementById('cut').onclick = cut;
+document.getElementById('up').onclick = up;
+document.getElementById('down').onclick = down;
+document.getElementById('forward').onclick = forward;
+document.getElementById('backward').onclick = backward;
+document.getElementById('left').onclick = left;
+document.getElementById('right').onclick = right;
+document.getElementById('center').onclick = center;
+document.getElementById('stop').onclick = stopp;
+document.getElementById('pause').onclick = pause;
+document.getElementById('resume').onclick = resume;
+document.getElementById('zprobe').onclick = zprobe;
+cl.onkeyup = keyUp;
+window.addEventListener('gamepadconnected', gamepadconnected);
+window.addEventListener('gamepaddisconnected', gamepaddisconnected);
+
+// Zprobe height: 19.2mm

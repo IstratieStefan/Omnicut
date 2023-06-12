@@ -39,16 +39,16 @@
                         </table>
                         <table id="Z">
                             <tr>
-                                <td><button id="up" class="coordBtn" style="width: 5vh !important; background-color: #00000000; background-image: url('./images/down-arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover; transform: rotate(180deg);"></button></td>
+                                <td><button id="up" class="coordBtn" style="width: 5vh !important; background-color: #00000000; background-image: url('./Assets/down-arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover; transform: rotate(180deg);"></button></td>
                             </tr>
                             <tr></tr>
                             <tr>
-                                <td><button id="down" class="coordBtn" style="width: 5vh !important; background-color: #00000000; background-image: url('./images/down-arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover;"></button></td>
+                                <td><button id="down" class="coordBtn" style="width: 5vh !important; background-color: #00000000; background-image: url('./Assets/down-arrow.png'); background-position: center; background-repeat: no-repeat; background-size: cover;"></button></td>
                             </tr>
                         </table>
                         <div style="display: flex; justify-content: end; flex-direction: column;">
                             <div style="margin-bottom: 1vh;">
-                                <input id="stepSize" type="number" class="stepSize" placeholder="step size (mm); def. 5">
+                                <input id="stepSize" style="width: 10vw;" type="number" class="stepSize" placeholder="step size (mm); def. 5">
                             </div>
                         </div>
                     </div>
@@ -71,15 +71,24 @@
             <div style="padding: 1vw">
                 <div id="source" style="height: 25%; display: flex; text-align: center; flex-direction: column;">
                     <textarea id="gcode" style="width: 100%; resize: none; outline: none; height: 90%; border-top-left-radius: 2vh; border-top-right-radius: 2vh; padding-left: 2vh; box-shadow: 0px 3px 6px #000000;" placeholder="G-code"></textarea>
-                    <button id="reload" style="width: 100%; resize: none; outline: none; height: 10%; border-bottom-left-radius: 2vh; border-bottom-right-radius: 2vh; padding-left: 2vh; box-shadow: 0px 3px 6px #000000; border-style: none;">Reload model</button>
+                    <button id="reload" style="width: 100%; outline: none; height: 10%; border-bottom-left-radius: 2vh; border-bottom-right-radius: 2vh; padding-left: 2vh; box-shadow: 0px 3px 6px #000000; border-style: none;">Reload model</button>
                 </div>
-                <div id="progress" style=" height: 15%;">
-                    <progress id="file" value="0" max="0"></progress>
-                    <p>Last active command: </p>
-                    <span id="command">None</span>
+                <div style="display: flex; justify-content: space-between;">
+                    <div id="progress" style=" height: 15%;">
+                        <progress id="file" value="0" max="0"></progress>
+                        <p>Last active command: </p>
+                        <span id="command">None</span>
+                    </div>
+                    <div id="zprobe" style="display: flex; flex-direction: row;">
+                        <img id="zprobe" class="action" style="height: 6vh; aspect-ratio: 1; align-self: center;" src="./Assets/height_FILL0_wght700_GRAD200_opsz48.svg">
+                        <div style="display: flex; justify-content: space-evenly; flex-direction: column;">
+                            <input id="zfeed" style="width: 5vw;" placeholder="Z-probe feed" value="50">
+                            <input id="ztravel" style="width: 5vw;" placeholder="Z-probe travel" value="200">
+                        </div>
+                    </div>
                 </div>
                 <div id="console" style=" height: 35%;">
-                    <textarea id="commandHistory" style=" padding-left: 2vh; width: 100%; resize: none; outline: none; height: 80%; border-top-left-radius: 2vh; border-top-right-radius: 2vh; padding-left: 2vh; box-shadow: 0px 3px 6px #000000;" readonly="true"></textarea>
+                    <textarea id="commandHistory" style="padding-left: 2vh; width: 100%; resize: none; outline: none; height: 80%; border-top-left-radius: 2vh; border-top-right-radius: 2vh; padding-left: 2vh; box-shadow: 0px 3px 6px #000000;" readonly="true"></textarea>
                     <div style="display: flex;">
                         <input id="commandLine" style="box-shadow: 0px 3px 6px #000000; padding-left: 2vh; width: 100%; height: 15%; font-size: 2vh; border-bottom-left-radius: 2vw; border-bottom-right-radius: 2vw; border-style: none; outline: none;">
                     </div>
@@ -157,6 +166,17 @@
                             </div>
                         </div>
                     </div>
+                    <div id="textEditor" style="display: none; width: 100%; justify-content: space-between; color: #eceff4;">
+                        <textarea id="writeArea" style="width: 60%; resize: none; margin: 0.3vw; border-radius: 2vh; padding-left: 2vh; padding-right: 2vh; outline: none;"></textarea>
+                        <!--  |<format:x5y17f10>I like coconuts |  and |\<format:x5y17f10>I like coconuts |-->
+                        <div style="display: flex; flex-direction: column;">
+                            <label>Select font (WOFF/OTF/TTF)</label>
+                            <input id="openFont" type="file">
+                            <label>Add text to model</label>
+                            <img class="action" style="aspect-ratio: 1; width: 3vw" id="write" src="./Assets/cached_FILL0_wght700_GRAD200_opsz48.svg">
+
+                        </div>
+                    </div>
                 </div>
                 <div id="model">
                     <div style="padding: 1vw; display: flex; width: 100%; justify-content: space-evenly;">
@@ -167,43 +187,27 @@
                         <img class="action" style ="aspect-ratio: 1; width: 3vw" id="cut" src="./Assets/carpenter_FILL0_wght700_GRAD200_opsz48.svg">
                     </div>
                     <canvas id="renderer" class="gcode-previewer" data-engine="three.js r148" width="2048" height="2048" style="touch-action: none; background-color: blueviolet;"></canvas>
-                    <img id="menu" class="action" style="aspect-ratio: 1; width: 3vw; margin: 0.2vw; opacity: 0%; position: fixed; bottom: 2vw; right: 2vw;" id="cut" src="./Assets/analytics_FILL0_wght700_GRAD200_opsz48.svg">
+                    <div id="loadSlow" style="opacity: 0%;">
+                        <img id="menu" class="action" style="aspect-ratio: 1; width: 3vw; margin: 0.2vw; position: fixed; bottom: 2vw; right: 2vw;" src="./Assets/analytics_FILL0_wght700_GRAD200_opsz48.svg">
+                        <img id="areaSize" class="action" style="aspect-ratio: 1; width: 3vw; margin: 0.2vw; position: fixed; bottom: 2vw; right: 6vw;" src="./Assets/crop_square_FILL0_wght700_GRAD200_opsz48.svg">
+                        <input id="volX" type="number" class="no-outline" style="position: fixed; left: 52vw; bottom: 6vw; width: 5vw; background-color: transparent; border-radius: 0.4vw; border-style: solid; border-color: #eceff4; color: #eceff4;" step="10" placeholder="X width" disabled value="250">
+                        <input id="volY" type="number" class="no-outline" style="position: fixed; left: 52vw; bottom: 4vw; width: 5vw; background-color: transparent; border-radius: 0.4vw; border-style: solid; border-color: #eceff4; color: #eceff4;" step="10" placeholder="Y length" disabled value="270">
+                        <input id="volZ" type="number" class="no-outline" style="position: fixed; left: 52vw; bottom: 2vw; width: 5vw; background-color: transparent; border-radius: 0.4vw; border-style: solid; border-color: #eceff4; color: #eceff4;" step="10" placeholder="Z height" disabled value="0">    
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div id="SVGtransform" style="display: none;"></div>
-    <script>
-        setTimeout(function() {
-            document.getElementById('loading-screen').style.display = 'none';
-        }, 4500);
-
-        setTimeout(function() {
-            document.getElementById('main-window').style.transform = 'translateY(-100%)';
-            setTimeout(function(){
-                document.getElementById('main-window').style.transitionDuration = '0s';
-                document.getElementById('menu').style.opacity = '100%';
-            }, 1000);
-        }, 5000);
-        var mode = 1;
-        document.getElementById('menu').onclick = function(){
-            if (mode){
-                document.getElementById('menu').src = "./Assets/build_FILL0_wght700_GRAD200_opsz48.svg";
-                document.getElementById('settings').style.display = 'flex';
-                document.getElementById('displayer2').style.display = 'none';
-            } else {
-                document.getElementById('menu').src = "./Assets/analytics_FILL0_wght700_GRAD200_opsz48.svg";
-                document.getElementById('settings').style.display = 'none';
-                document.getElementById('displayer2').style.display = 'flex';
-            }
-            mode = !mode;
-        }
-    </script>
+    <div id="SVGtransform" style="display: none;">
+    </div>
+    <script src="https://raw.githubusercontent.com/progers/pathseg/master/pathseg.js"></script>
     <script src="js/three.min.js"></script>
+    <script src="js/init.js" type="module"></script>
     <script src="js/gcode-preview.js"></script>
     <script src="js/svg2gcode.js" type="module"></script>
     <script src="js/init-preview.js" type="module"></script>
     <script src="js/fileInputHandler.js" type="module"></script>
-    <script src="js/board-readWrite.js"></script>
+    <script src="js/board-readWrite.js" type="module"></script>
+    <script src="js/text2svg.js" type="module"></script>
   </body>
 </html>

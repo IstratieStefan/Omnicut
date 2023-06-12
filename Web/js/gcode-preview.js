@@ -359,7 +359,7 @@
 
     		// this method is exposed, but perhaps it would be better if we can make it private...
     		this.update = function () {
-
+				
     			const offset = new three.Vector3();
 
     			// so camera.up is the orbit axis
@@ -2984,7 +2984,7 @@
             this.group = new three.Group();
             this.group.name = 'gcode';
             const state = { x: 0, y: 0, z: 0, r: 0, e: 0, i: 0, j: 0 };
-            for (let index = 0; index < this.layers.length; index++) {
+            for (let index = 0;index < this.layers.length; index++) {
                 if (index > this.maxLayerIndex)
                     break;
                 const currentLayer = {
@@ -3009,8 +3009,7 @@
                         };
                         if (index >= this.minLayerIndex) {
                             const extrude = g.params.e > 0;
-                            if ((extrude && this.renderExtrusion) ||
-                                (!extrude && this.renderTravel)) {
+                            if ((extrude && this.renderExtrusion) || (!extrude && this.renderTravel)) {
                                 if (cmd.gcode == 'g2' || cmd.gcode == 'g3' || cmd.gcode == 'g02' || cmd.gcode == 'g03') {
                                     this.addArcSegment(currentLayer, state, next, extrude, cmd.gcode == 'g2' || cmd.gcode == 'g02');
                                 }
