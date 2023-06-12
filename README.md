@@ -253,7 +253,7 @@ Returns the distance between two points<br>
 `function convert2Gcode(precision, multiplier, feed, offsetX, offsetY, offsetZ) -> string`<br>
 
 
-Returns a string represented by the g-code obtained from converting the SVG present in `document.getElementById('SVGtransform')`. It is compatible with `SVGPathElement`, `SVGCircleElement`, `SVGRectElement` and `SVGEllipseElement`.<br>
+Returns a string represented by the g-code obtained from converting the SVG present in `document.getElementById('SVGtransform')`. It is compatible with `SVGPathElement` and `SVGPolygonElement`.<br>
 `precision (number)` Specifies the precision of the model<br>
 `multiplier (number)` Specifies how much will the model be scaled<br>
 `feed (number)` Specifies the movement speed of the spindle<br>
