@@ -10,7 +10,7 @@ function init(){  //see documentation
 		canvas: document.querySelector('.gcode-previewer'), //canvas of the preview
 		topLayerColor: topLayerColor,
 		lastSegmentColor: lastSegmentColor,
-		buildVolume: settings?.buildVolume || {x: 250, y: 270, z: 50}, //grid size
+		buildVolume: settings?.buildVolume || {x: 250, y: 270, z: 0}, //grid size
 		initialCameraPosition: [0,400,450],
 		allowDragNDrop: false,
 		startColor: [20, 20, 20],

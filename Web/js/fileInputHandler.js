@@ -30,7 +30,7 @@ function loadModel(){
     preview.resize(); //resizes preview
 }
 
-function refresh(){ //see documentation
+export function refresh(){ //see documentation
     let code = convert2Gcode(+document.getElementById('precision').value, +document.getElementById('multiplier').value, +document.getElementById('feed').value, +document.getElementById('ofX').value, +document.getElementById('ofY').value, +document.getElementById('ofZ').value);
     startLoadingProgressive(code);
     document.getElementById('gcode').value = code.replaceAll(' E40', '');

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <path fill="black" d="M0 0h64v8H0Z" />
+  <path fill="black" d="M0 12h64v8H0Z" />
+  <path fill="black" d="M0 24h8v40H0Z" />
+  <path fill="black" d="M12 24h8v40H12Z" />
+  <path fill="black" d="M44 24h8v40H44Z" />
+  <path fill="black" d="M56 24h8v40H56Z" />
+  <path fill="black" d="M24 24h16v16H24Z" />
+  <path fill="white" d="M29 29h6v6H29Z" />
+  <path fill="black" d="M24 43h6v21H24Z" />
+  <path fill="black" d="M34 43h6v21H34Z" />
+</svg>

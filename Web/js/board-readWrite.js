@@ -1,4 +1,6 @@
-let mainOutput = "", secondOutput = "", prevGRBL = "Grbl 0.9j ['$' for help]", commands = [], index = 0, milling = false, lower = 0;
+import { isOutside, isLoaded } from "./svg2gcode.js";
+
+let mainOutput = "", secondOutput = "", prevGRBL = "Grbl 0.9j ['$' for help]", commands = [], index = 0, milling = false, lower = 0, running = false;
 
 let ta = document.getElementById('gcode');
 let cl = document.getElementById('commandLine');
@@ -34,7 +36,8 @@ function readFromMainBoard(){
             let len = mainOutput.length-1;
             for (let i = 0; i < len; i++){ //for each command
                 if (mainOutput[i][0] == '<'){ //if the output starts with '<', it is a "?" command feedback, so update position
-                    let data = mainOutput[i].split(':')[1].split(',');
+                    let data = mainOutput[i].split(':')[2].split(',');
+                    console.log(mainOutput[i], mainOutput[i].split(':')[2], mainOutput[i].split(':')[2].split(','))
                     document.getElementById('Xval').innerHTML = data[0];
                     document.getElementById('Yval').innerHTML = data[1];
                     document.getElementById('Zval').innerHTML = data[2];
@@ -44,12 +47,17 @@ function readFromMainBoard(){
                         index = 0;
                         evalNext();
                     }
+                } else if (mainOutput[i][0] == '['){
+                    commands = [`G92 Z19.2`, `G91`, `G0 Z5`, `G90`];
+                    index = 0;
+                    evalNext();
                 } else if (mainOutput[i].includes('end')) { // G-code command finished; send the next one
                     if (index < commands.length){ // there are still commands to be sent
                         document.getElementById('file').value = +document.getElementById('file').value+1;
                         evalNext();
                     } else if (milling) { //the process finished, however we are milling so we might need to start another cycle
-                        if (lower < +document.getElementById('Tdepth').value){ // if spindle is not low enough
+                        document.getElementById('file').max = commands.length * Math.ceil((+document.getElementById('Tdepth').value)/(+document.getElementById('depth').value));
+                        if (lower <= +document.getElementById('Tdepth').value){ // if spindle is not low enough
                             if (lower+(+document.getElementById('depth').value) >= +document.getElementById('Tdepth').value){
                                 lower = +document.getElementById('Tdepth').value;
                             } else {
@@ -62,10 +70,13 @@ function readFromMainBoard(){
                             commands = [`G0 X0 Y0 Z0`];
                             index = 0;
                             milling = false;
+                            running = false;
                             document.getElementById('file').value = 0;
                             lower = 0;
                             evalNext();
                         }
+                    } else {
+                        running = false;
                     }
                 } else if (!mainOutput[i].includes('ok')){ // any other command is given, as long as it is not "ok", will be displayed in command history
                     ch.value += mainOutput[i] + '\n';
@@ -83,28 +94,52 @@ function ask(){ //see documentation
 }
 
 function draw(){ //see documentation
+    if (!isLoaded()){
+        alert("No model was loaded!");
+        return;
+    }
+
+    if (isOutside()){
+        if (!confirm("Movement is outside pre-determined volume (X and Y). Continue?")){
+            return;
+        }
+    }
+
     if (limits){
         commands = document.getElementById('gcode').value.split('\n');
         document.getElementById('file').value = 0;
         document.getElementById('file').max = commands.length;
         index = 0;
+        running = true;
         evalNext();
     } else {
         alert("Can't draw while limits are turned off!")
     }
-    
 }
 
 function cut(){ //see documentation
+    if (!isLoaded()){
+        alert("No model was loaded!");
+        return;
+    }
+    
+    if (isOutside()){
+        if (!confirm("Movement is outside pre-determined volume (X and Y). Continue?")){
+            return;
+        }
+    }
+
     if (!limits){
         alert("Can't cut while limits are turned off!");
     } else if (+document.getElementById('spindle').innerHTML.replace(' %', '') < 50){
         alert("Spindle speed must be over 50% to cut!")
     } else {
+        running = true;
         commands = document.getElementById('gcode').value.split('\n');
         commands.push(`G0 X0 Y0 Z-${lower}`);
+        lower = +document.getElementById('depth').value;
         document.getElementById('file').value = 0;
-        document.getElementById('file').max = commands.length;
+        document.getElementById('file').max = commands.length * Math.ceil((+document.getElementById('Tdepth').value)/(+document.getElementById('depth').value));
         index = 0;
         milling = true;
         evalNext();
@@ -183,6 +218,7 @@ function center(){ //see documentation
 }
 
 function stopp(){ //see documentation
+    running = false;
 	commands = [`\x18`];
 	index = 0;
     evalNext();
@@ -198,6 +234,14 @@ function resume(){ //see documentation
 	commands = [`~`];
 	index = 0;
     evalNext();
+}
+
+function zprobe(){
+    if (!running){
+        commands = [`G38.2 F${+document.getElementById('zfeed').value} Z${-(+document.getElementById('ztravel').value)}`];
+        index = 0;
+        evalNext();
+    }
 }
 
 function keyUp(e){
@@ -246,7 +290,7 @@ function readControlls(){
                 if (step.value == ""){
                     step.value = 5;
                 }
-                forward();
+                left();
                 ok1 = 1;
             }
         } else {
@@ -258,7 +302,7 @@ function readControlls(){
                 if (step.value == ""){
                     step.value = 5;
                 }
-                backward();
+                right();
                 ok2 = 1;
             }
         } else {
@@ -270,7 +314,7 @@ function readControlls(){
                 if (step.value == ""){
                     step.value = 5;
                 }
-                left();
+                forward();
                 ok3 = 1;
             }
         } else {
@@ -282,7 +326,7 @@ function readControlls(){
                 if (step.value == ""){
                     step.value = 5;
                 }
-                right();
+                backward();
                 ok4 = 1;
             }
         } else {
@@ -370,6 +414,9 @@ document.getElementById('center').onclick = center;
 document.getElementById('stop').onclick = stopp;
 document.getElementById('pause').onclick = pause;
 document.getElementById('resume').onclick = resume;
+document.getElementById('zprobe').onclick = zprobe;
 cl.onkeyup = keyUp;
 window.addEventListener('gamepadconnected', gamepadconnected);
 window.addEventListener('gamepaddisconnected', gamepaddisconnected);
+
+// Zprobe height: 19.2mm
