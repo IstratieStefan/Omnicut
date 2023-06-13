@@ -104,6 +104,469 @@ Această caracteristică oferă un nivel ridicat de automatizare și eficiență
 
 # Capitolul IV. Software
 
+Omnicut a fost programat într-o varietate de limbaje: C++ (pentru Arduino), HTML, CSS, JavaScript și Python.
+
+
+Proiectul este alcătuit din 3 componente principale:
+<ul>
+  <li>Interfața cu utilizatorul - HTML, CSS și JavaScript</li>
+  <li>Comunicarea cu plăcile arduino - Python</li>
+  <li>Codul de pe arduino - C++</li>
+</ul>
+
+## Aplicația
+
+Interfața cu utilizatorul a fost creată folosind HTML, CSS și JavaScript.
+Privind aplicația, observăm că aplicația este împărțită în 2 părți principale care apar imediat după ecranul de încărcare. În stânga, avem, începând de sus în jos: o secțiune de poziționare cu 2 subdiviziuni (mișcare relativă și poziția curentă; O zonă de text g-code; Un vizualizator de progres, o zonă z-probe și o consolă. În dreapta, avem un antet cu funcționalitate dublă, cele fiind monitorizarea (monitorizarea stării axului și a ventilatoarelor, precum și vizualizarea temperaturii și umidității curente) și setări de fișiere (deschiderea unui cod g sau a unui fișier SVG, precum și editarea unui Fișier SVG în mai multe moduri); o bară de acțiuni; un vizualizator de cod g și un buton pentru a comuta între funcționalitățile antetului.
+Să descriem fiecare parte a proiectului.
+
+### 1. Secțiunea de poziționare
+
+![imagine](https://github.com/IstratieStefan/Omnicut/assets/77077774/fe41300e-3935-4bcd-a98d-3d38d617ec71)
+
+Secțiunea de poziționare este alcătuită din două părți, de vizualizare și de mișcare.
+Vizualizarea ne permite să vedem poziția exactă a axului pe cele 3 axe în raport cu punctul de pornire în milimetri (în mod implicit 175 mm din colțul din stânga jos definit atât pe axa X, cât și pe axa Y). Punctul de pornire Z variază în funcție de sarcina care trebuie finalizată, desen sau tăiere). Poziția este determinată prin trimiterea constantă a „?" comanda către GRBL, returnând starea GRBL.
+Mișcarea ne permite să mișcăm manual axul în sus, în jos, la stânga, la dreapta, înainte sau înapoi cu un număr de milimetri specificat în caseta de introducere a pasului în raport cu poziția curentă. Valoarea implicită a pasului de intrare este 5 mm. Deplasarea are, de asemenea, un buton de centrare care va trimite mașina la punctul (X:0, Y:0, Z:0) indiferent unde se află. Punctul (X:0, Y:0, Z:0) este punctul de plecare.
+
+### 2. Zona de text G-code
+
+![imagine](https://github.com/IstratieStefan/Omnicut/assets/77077774/fed7584e-f32b-4dfa-8d72-6cee8065a474)
+
+Zona de text g-code este un loc în care codul g dintr-un fișier (sau generat dintr-un SVG) poate fi vizualizat ca text și copiat. Puteți edita direct codul prezent în zona de text pentru a influența comenzile pentru ax, totuși comenzile editate nu vor fi vizibile în vizualizatorul modelului g-code până când apăsați butonul de reîncărcare. Butonul de reîmprospătare nu va funcționa, deoarece acesta relansează modelul svg și îl reconvertește în g-code, astfel încât orice modificare ar fi pierdută. De asemenea, puteți să scrieți sau să lipiți codul g pentru a-l executa.
+
+### 3. Vizualizator de progres
+
+![imagine](https://github.com/IstratieStefan/Omnicut/assets/77077774/95795f19-ecfe-4c32-9e36-7712b859508e)
+
+Vizualizatorul de progres este alcătuit din 2 părți.
+Una dintre ele este bara de progres. Acesta numără numărul de comenzi executate din numărul total de comenzi prezente în zona de text după vopsire sau tăiere. Viteza barei de progres nu este constantă, având în vedere că unele comenzi durează mai mult sau mai puțin timp pentru a fi finalizate în comparație cu altele.
+A doua parte este un vizualizator de comenzi care ne arată comanda g-code care este în curs de executare/ultima comandă care a fost executată de program.
+
+### 4. Zona sondei Z
+
+![imagine](https://github.com/IstratieStefan/Omnicut/assets/77077774/c572c165-2fab-49d3-9d2f-c92cb79983d3)
+
+Sonda Z este o caracteristică a CNC pentru a se poziționa cu precizie pe axa Z folosind o piesă hardware.
+Meniul din aplicație conține o casetă de introducere a vitezei de avans care specifică cât de repede se va mișca axul, precum și un Z maxim sau cât de mult ar trebui să coboare dacă nu este găsită nicio sondă z. După atingerea sondei z, axul se va mișca cu 5 mm în sus și va seta noul sistem de coordonate 0 pe axa Z pe suprafața materialului pe care s-a așezat sonda z.
+
+### 5. Consolă
+
+![imagine](https://github.com/IstratieStefan/Omnicut/assets/77077774/021c07b5-a6c3-46d8-9079-040bd9da700b)
+
+Consola are o zonă de text istoric comenzi, precum și o linie de comandă în care putem scrie o singură linie.
+Istoricul comenzilor afișează fiecare comandă executată direct de utilizator, rezultatul comenzilor (cu excepția „ok” implicit returnat de GRBL și cu excepția „sfârșitului” returnat de GRBL după executarea unei comenzi de tip „G”. de „sfârșit” a fost schimbat de noi în codul GRBL) și orice erori/avertismente/mesaje de la GRBL. Comenzile executate de utilizator vor fi afișate cu un „>>>” suplimentar la început.
+În linia de comandă, utilizatorul poate scrie comenzi singulare. Comenzile pot fi de natura GRBL, de natura Omnicut sau de natura comenzi g-code suportate GRBL. Comenzile Omnicut încep cu un asterisc.
+
+###### Comenzi de control GRBL
+https://github.com/gnea/grbl/blob/master/doc/markdown/commands.md
+
+###### Comenzi de setări GRBL
+https://github.com/gnea/grbl/blob/master/doc/markdown/settings.md
+
+###### Comenzi acceptate de GRBL
+https://www.cnccookbook.com/g-code-m-code-command-list-cnc-mills/
+
+###### Comenzi Omnicut
+|Comandă|Descriere|
+|-|-|
+|*clear|Șterge istoricul comenzilor|
+|*limits|Dezactivează limitarea mișcării CNC|
+|*origin|Setează poziția curentă a spindle-ului ca fiind originea sistemului|
+
+### 6. Monitorizare
+
+![imagine](https://github.com/IstratieStefan/Omnicut/assets/77077774/8781b0ec-6889-420e-a66d-dc578eecdf01)
+
+Secțiunea fila Monitorizare este locul unde putem vedea datele despre CNC.
+Prima coloană afișează umiditatea și temperatura zonei de lucru.
+A doua coloană afișează umiditatea și temperatura zonei componente.
+A treia coloană afișează viteza actuală a axului și a celor 3 ventilatoare.
+
+### 7. Setări fișier
+
+![imagine](https://github.com/IstratieStefan/Omnicut/assets/77077774/983db6e3-00b5-4765-9a77-4d8b4627b768)
+
+Secțiunea file setări fișier a fost creată pentru a permite utilizatorului să influențeze modelul încărcat dintr-un SVG. !!! Editorul de modele funcționează doar pentru modelele încărcate din fișiere SVG, nu și pentru fișierele g-code încărcate direct !!!
+
+|Opțiune|Descriere|
+|-|-|
+|Nivel de creștere|Specifică cât de mult se va ridica axul pentru a se muta într-o altă secțiune a desenului/frezarea fără tăiere. Această valoare este relativă|
+|Precizia modelului|Specifică numărul de pixeli din întregul model SVG care va fi utilizat pentru a crea codul g pentru acel SVG. O precizie mai mică va dura mai puțin timp pentru compilare, dar va înrăutăți calitatea desenului|
+|Multiplicator de mărime|Un număr care poate crește/scădea dimensiunea unui model|
+|Offset X|Specifică cât de mult trebuie să fie deplasat modelul pe axa X (mm)|
+|Offset Y|Specifică cât de mult trebuie să fie deplasat modelul pe axa Y (mm)|
+|Offset Z|Specifică cât de mult trebuie să fie deplasat modelul pe axa Z (mm)|
+|Rata de alimentare|Specifică rata de alimentare pentru un fișier cod-g pe care îl creăm. (viteza de avans recomandată pentru desen = 250; viteza de avans recomandată pentru frezare = 100)|
+|Adâncimea treptei|La frezare, specifică cât de mult va coborî axul de fiecare dată când taie modelul (mm)|
+|Adancime totala|La frezare, specifica cat trebuie sa taie axul din model (mm)|
+
+Secțiunea de setări de fișier are, de asemenea, o intrare de fișier pentru a încărca un fișier (SVG sau g-code) în model și un buton de reîmprospătare pentru a reîncărca modelul după unele modificări. Tine minte! Orice modificări făcute direct în vizualizatorul text g-code vor fi șterse când apăsați pe reîmprospătare!
+
+### 8. Scrisul
+
+![imagine](https://github.com/IstratieStefan/Omnicut/assets/77077774/dd1db4f5-892f-4708-af11-d3393ef586b1)
+
+Fila de scriere este folosită pentru a adăuga text la modelul dvs. Este alcătuit din mai multe părți:
+* **Zona de text** - Acolo scrieți mesajul. „\n” este acceptat
+* **Dimensiune** - Specifică dimensiunea textului
+* **Font Select** - Selectează un font de utilizat la randarea modelului
+
+O bună practică ar fi să încărcați modelul cu o precizie mai proastă, apoi să îl poziționați și să îl formatați, apoi să îi oferiți în sfârșit o precizie bună pentru a reduce timpul de așteptare.
+
+### 9. Bara de acțiuni
+
+![imagine](https://github.com/IstratieStefan/Omnicut/assets/77077774/9e8dad05-91ea-468d-a3cd-4310c9b009b8)
+
+Bara de acțiuni conține 5 butoane utile care vă vor ajuta să controlați CNC-ul.
+Butonul de oprire este folosit pentru a opri complet CNC-ul instantaneu, după ce îl utilizați, poate fi necesar să rulați comanda $X - vedeți comenzi GRBL.
+Butonul de pauză este folosit pentru a întrerupe o acțiune/proces în curs de desfășurare.
+Butonul de pornire este folosit pentru a relua o acțiune/proces în derulare.
+Butonul de desen este folosit pentru a desena modelul curent.
+Butonul de frezare este folosit pentru a tăia modelul curent.
+
+Diferența dintre ultimele 2 butoane este că unul dintre ele va parcurge doar o dată prin cod, celălalt va parcurge și va coborî de fiecare dată până când se atinge adâncimea totală.
+
+### 10. Vizualizator de cod G
+
+![imagine](https://github.com/IstratieStefan/Omnicut/assets/77077774/76cf5a01-8785-4d79-9543-a31c1c476f67)
+
+Un vizualizator 3D simplu g-code unde puteți previzualiza modelul. Vă puteți deplasa prin model folosind butoanele mouse-ului.
+
+### 11. Butonul de comutare
+
+![imagine](https://github.com/IstratieStefan/Omnicut/assets/77077774/c94e9adc-2584-4d37-8600-6b91970f861f)
+
+Un buton care comută între modul setări fișiere și modul de monitorizare.
+
+## Utilizarea controlerului
+
+Până în acest moment, doar controlerul Playstation 4 DualShock și controlerul XBOX 360 au fost testate, totuși alte controlere ar trebui să funcționeze bine. Controalele pentru toate controlerele ar trebui să fie cele din imagine.
+
+![image2](https://github.com/IstratieStefan/Omnicut/assets/77077774/fe67cd49-5762-4849-a6b5-c97b2560d69f)
+
+## Control extern
+
+CNC are un sistem de interacțiune cu utilizatorul extern format dintr-un LCD, un encoder și un buton. Este format din 5 pagini
+
+#### 1. Acasă
+
+Afișează titlul proiectului și versiunea
+
+#### 2. Temperatura
+
+Afișează temperatura de sus și de jos a CNC
+
+#### 3. Umiditatea
+
+Afișează umiditatea de sus și de jos a CNC
+
+#### 4. Viteza axului
+
+Afișează viteza actuală a axului. Dacă axul nu se rotește, asigurați-vă că comutatorul de alimentare al axului este pornit.
+De asemenea, puteți seta viteza axului în două moduri:
+1. Incrementare: Rotiți codificatorul pentru a crește sau a reduce viteza axului
+2. Viteză fixă: faceți clic pe butonul codificator pentru a comuta între viteza maximă (100%) și viteza minimă (0%)
+
+#### 5. Ventilatie
+
+Afișează viteza curentă a ventilatoarelor. Dacă ventilatoarele nu se rotesc, asigurați-vă că întrerupătorul general de alimentare este pornit.
+Ventilația are două moduri:
+
+##### a) Manual
+Vă permite să modificați viteza similară cu axul
+
+##### b) Automat
+Se va calcula viteza ventilatoarelor pe baza temperaturii maxime date de cei doi senzori
+
+Puteți comuta între moduri făcând clic pe codificator.
+
+## Programare
+
+Programarea poate fi împărțită în 3 categorii: programare JavaScript (sau principala), programare Python (sau comunicarea cu hardware-ul) și C++ (sau limbajul pe care rulează hardware-ul)
+
+### 1. JavaScript
+
+Există 7 fișiere JavaScript. ``gcode-preview.js`` și ``three.min.js`` sunt folosite pentru a reda modelul 3d și au fost preluate de pe https://gcode-preview.web.app/ . Celelalte 5 sunt un pic mai complicate.
+
+#### `svg2gcode.js`
+
+As the name suggests, this file converts SVG to g-code<br>
+
+`function pyth(x1, y1, x2, y2) -> number`<br>
+
+
+Returns the distance between two points<br>
+`x1 (number)` X of first point<br>
+`y1 (number)` Y of first point<br>
+`x2 (number)` X of second point<br>
+`y2 (number)` Y of second point<br>
+
+
+`function convert2Gcode(precision, multiplier, feed, offsetX, offsetY, offsetZ) -> string`<br>
+
+
+Returns a string represented by the g-code obtained from converting the SVG present in `document.getElementById('SVGtransform')`. It is compatible with `SVGPathElement`, `SVGCircleElement`, `SVGRectElement` and `SVGEllipseElement`.<br>
+`precision (number)` Specifies the precision of the model<br>
+`multiplier (number)` Specifies how much will the model be scaled<br>
+`feed (number)` Specifies the movement speed of the spindle<br>
+`offsetX (number)` Specifies the offset of the model on the X axis from the origin<br>
+`offsetY (number)` Specifies the offset of the model on the Y axis from the origin<br>
+`offsetZ (number)` Specifies the offset of the model on the Z axis from the origin<br>
+
+
+`function raise(direction) -> undefined`<br>
+
+
+Moves the spindle up or down, based on the input (1 for up, 0 for down)<br>
+`direction (boolean)` direction of the action<br>
+
+
+
+#### `init-preview.js`
+
+This file initializes and controlls the 3d g-code preview
+
+`function init() -> undefined`<br>
+
+
+Initializes the 3d preview as the variable `preview`<br>
+
+
+`function startLoadingProgressive(gcode) -> undefined`<br>
+
+
+Loads g-code from a string by chunk-size amounts<br>
+`gcode (string)` The g-code string that will be loaded<br>
+
+#### `fileInputHandler.js`
+
+This file handles the files given by the user<br>
+
+`function loadModel() -> undefined`<br>
+
+Detects the type of the file (SVG or g-code) and acts accordingly. If the file is g-code type, it will be simply loaded and written in the g-code area. If it is an SVG, it will be converted, the model will be displayed and the text will be written after removing extrusion (since this is a milling CNC)<br>
+
+`function refresh() -> undefined`<br>
+
+Refreshes the model and applies the offsets, scales etc.
+
+`function reload() -> undefined`<br>
+
+Renders exactly the code from the g-code text area<br>
+
+#### `board-readWrite.js`
+
+This file handles the communication with python using `Eel.js`, mainly sending of g-codes.<br>
+
+`function zprobe() -> undefined`<br>
+
+Starts the z-probe
+
+`function readFromSecondBoard() -> undefined`<br>
+
+Reads the data from the secondary arduino board. It waits for a promise. After promise the arrives, the values in the app are updated
+
+`function readFromMainBoard() -> undefined`<br>
+
+Reads the data from GRBL. Evaluates the data based on the type of input. If it is `?` feedback, it updates the position. If it is `ok`, it ignores. If it is `end`, it executes the next command. Otherwise, it prints the output in the command history.
+
+`function ask() -> undefined`<br>
+
+Sends a command to GRBL to fetch the current status<br>
+
+`function draw() -> undefined`<br>
+
+Starts the drawing process<br>
+
+`function cut() -> undefined`<br>
+
+Starts the milling process<br>
+
+`function evalNext() -> undefined`<br>
+
+Evaluates the next command in the command list
+
+`function up() -> undefined`<br>
+
+Moves the spindle up based on the step size<br>
+
+`function down() -> undefined`<br>
+
+Moves the spindle down based on the step size<br>
+
+`function left() -> undefined`<br>
+
+Moves the spindle to the left based on the step size<br>
+
+`function right() -> undefined`<br>
+
+Moves the spindle to the right based on the step size<br>
+
+`function forward() -> undefined`<br>
+
+Moves the spindle forwards based on the step size<br>
+
+`function backward() -> undefined`<br>
+
+Moves the spindle backwards based on the step size<br>
+
+`function center() -> undefined`<br>
+
+Moves the spindle to the start point<br>
+
+`function stopp() -> undefined`<br>
+
+Stops all current processes ASAP and goes in alarm mode<br>
+
+`function pause() -> undefined`<br>
+
+Pauses the current process<br>
+
+`function pause() -> undefined`<br>
+
+Resumes the current process<br>
+
+`function keyUp() -> undefinedundefined`<br>
+
+Checks if the last key is "Enter" and executes the command from the command line<br>
+
+`function sendGcodeFeedback(msg) -> undefined`<br>
+
+Appends a message to the command history<br>
+
+`msg (string)` The message to be appended<br>
+
+`function gamepadconnected(e) -> undefined`<br>
+
+Sets the gamepad index to the index of the recently connected gamepad<br>
+
+`e (event)` Used to get the gamepad index<br>
+
+`function gamepaddisconnected() -> undefined`<br>
+
+Sets the gamepad index to -1, since the gamepad was disconnected
+
+`function readControlls() -> undefined`<br>
+
+Reads what buttons are pressed on the controller and acts accordingly
+
+#### `text2svg.js`
+
+This file is about displaying text on the model
+
+`function text2path(str, x, y, size, font) -> String`<br>
+
+Converts a string to a path using the given parameters
+
+`str (string)` The string to be converted<br>
+`x (number)` The X position of the generated text<br>
+`y (number)` The Y position of the generated text<br>
+`size (number)` The font size of the generated text<br>
+`font (font object)` The font that will be used to generate the text<br>
+
+`function loadFont() -> undefined`<br>
+
+Loads a font and saves it for the following renders<br>
+
+`function write() -> undefined`<br>
+
+Converts the text to SVG path using opentype module and loads it in the g-code viewer<br>
+
+### 2. Python
+
+All the python code is contained by the file `main.py`
+
+`(exposed) def readSerial() -> None`<br>
+
+Reads the first message from GRBL, right after it initialises<br>
+
+`(exposed) def evalGcode(command) -> None`<br>
+
+Sends a given command to GRBL<br>
+
+`command (str)` The command to be executed<br>
+
+`def remove_comment(string) -> str`<br>
+
+Removes comments from g-code commands<br>
+
+`string (str)` The command to be cleared from comments<br>
+
+`(exposed) def readData() -> str`<br>
+
+Reads data about temperature, humidity, fan speed and spindle speed<br>
+
+`(exposed) def readGRBL() -> str`<br>
+
+Reads whatever message GRBL might output
+
+_If a function is (exposed), it means that it can be accessed by JavaScript trough Eel_
+
+### 3. C++
+
+The C++ (from Arduino) is made up of two files: `monitoring.ino` and `CNC.ino`
+
+#### `monitoring.ino`
+
+This file contains the code of the secondary board<br>
+
+`void icon()`<br>
+
+Displays the current icon<br>
+
+`void displayHome()`<br>
+
+Displays the home menu<br>
+
+`void displayTemperature()`<br>
+
+Displays the temperature menu<br>
+
+`void displayHumidity()`<br>
+
+Displays the humidity menu<br>
+
+`void displaySpindleSpeed()`<br>
+
+Displays the spindle speed menu<br>
+
+`void displayFanSpeed()`<br>
+
+Displays the fan speed menu<br>
+
+`void setup()`<br>
+
+Sets everything up and initialises pins and the Serial connection<br>
+
+`void loop()`<br>
+
+The loop of the script
+
+#### `CNC.ino`
+
+This file contains the modified GRBL.
+
+We defined a new status as a g-code command end with the message "end" for this status.
+
+You can learn more about GRBL at: https://github.com/grbl/grbl
+
+## Alte
+
+### Eroare index negăsit
+![imagine](https://github.com/IstratieStefan/Omnicut/assets/77077774/e71ed4f0-305d-435c-b936-7291ec41ad3a)
+
+Dacă întâmpinați această eroare, înseamnă că calea folderului `web` este incorectă. setați parametrul `web_path` din `board_config.json` la calea folderului `web`.
+
+### Configurarea unui alt dispozitiv
+
+Pentru a configura un alt dispozitiv, trebuie mai întâi să încărcați codul pe cele 2 plăci (rețineți că GRBL-ul folosit în placa principală poate fi găsit în folderul Arduino și nu este GRBL implicit. De asemenea, trebuie să aveți `LiquidCrystal_I2C` și Bibliotecile `dht11` instalate pentru a doua placă)
+
+După aceea, găsiți porturile COM ale celor două plăci și adăugați-le editați în fișierul `board_config.json`.
+
+### Amplasarea axului în poziția de pornire
+
+Poziția de start este considerată a fi la 1,75 cm distanță de ambele axe din colțul negru. Deschideți aplicația, apoi mutați axul în acea poziție. După ce axul este în poziția dorită, redeschideți aplicația și ar trebui să fiți gata! Dacă nu puteți merge la punctul de pornire din cauza limitelor, asigurați-vă că rulați `*limits` pentru a dezactiva limitele. Atenție! După ce rulați comanda `*limits`, CNC-ul nu va împiedica axul să lovească o marjă. Dacă este lovită o marjă, opriți CNC-ul cât mai curând posibil și deconectați USB-urile de la computer, apoi încercați să mutați axul (manual) într-o poziție normală înainte de a reporni aplicația.
+
 # Capitolul V. Design industrial
 
 Piesele au fost modelate in Autodesk Fusion 360 și printate pe o Imprimanta Creality Cr6 se cu PETG pentru o rezistență superioară a pieselor.
