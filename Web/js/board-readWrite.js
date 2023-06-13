@@ -251,6 +251,14 @@ function keyUp(e){
 		} else if (cl.value == '*limits'){ //if value is *limits, toggles limits
             limits = !limits;
             ch.value += `>>> *limits\nLimits set to ${limits}\n`;
+        } else if (cl.value == '*origin'){
+            if (!running){
+                commands = [`G92 X0 Y0 Z0`];
+                index = 0;
+                evalNext();
+            } else {
+                alert("Can't reset origin while machine is running");
+            }
         } else { //otherwise, execute command via GRBL
 			ch.value += `>>> ${cl.value}\n`;
 			ch.scrollTop = ch.scrollHeight;

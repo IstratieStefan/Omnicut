@@ -168,7 +168,12 @@
                     </div>
                     <div id="textEditor" style="display: none; width: 100%; justify-content: space-between; color: #eceff4;">
                         <textarea id="writeArea" style="width: 60%; resize: none; margin: 0.3vw; border-radius: 2vh; padding-left: 2vh; padding-right: 2vh; outline: none;"></textarea>
-                        <!--  |<format:x5y17f10>I like coconuts |  and |\<format:x5y17f10>I like coconuts |-->
+                        <!--  |<format:x5y17f10>I like coconuts |  and |\<format:x5y17f10>I like coconuts | ... No.-->
+                        <div style="display: flex; flex-direction: column; justify-content: space-evenly;">
+                            <input id="fontSize" style="width: 5vw;" placeholder="size">
+                            <input id="textX" style="width: 5vw;" placeholder="x">
+                            <input id="textY" style="width: 5vw;" placeholder="y">
+                        </div>
                         <div style="display: flex; flex-direction: column;">
                             <label>Select font (WOFF/OTF/TTF)</label>
                             <input id="openFont" type="file">
